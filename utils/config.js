@@ -1,9 +1,10 @@
 const env = require('dotenv').config();
-const discord = require('discord.js');
-const _ = require('lodash');
+const discord = require('discord.js')
+const Enmap = require('enmap');
+const _ = require('lodash')
 const Logger = require('./logger');
 
-function loadBot() {
+async function loadBot() {
     if (process.env.ENVIRONMENT === 'development') {
         Logger.log(`Environment set to development.`)
     } else if (process.env.ENVIRONMENT === 'production') {
@@ -14,6 +15,13 @@ function loadBot() {
     }
 
     const client = new discord.Client();
+
+    client.commands = new Enmap();
+    client.aliases = new Enmap();
+    client.settings = new Enmap({ name: 'settings' })
+
+    require('./load-commands')(client, `./commands`);
+
     client.login(process.env.BOT_TOKEN)
         .then(() => Logger.ready(`Bot successfully logged as ${client.user.username}[${client.user.id}].`))
         .catch((error) => Logger.error(`Unexpected error while bot login: ${error.message}`))
