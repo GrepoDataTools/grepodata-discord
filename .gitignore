@@ -1,8 +1,9 @@
-prod_auth.json
-
 # IDE
 .idea/
 .vscode/
+
+# Environment file
+.env
 
 # Logs
 logs
