@@ -26,10 +26,18 @@
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "path": "^0.12.7",
-    "prettier": "^1.19.1",
     "prop-types": "^15.7.2",
     "recursive-readdir": "^2.2.2",
     "request": "^2.88.0",
     "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "husky": "^4.2.1",
+    "pretty-quick": "^2.0.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   }
 }
