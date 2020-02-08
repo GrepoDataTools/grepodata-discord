@@ -1,4 +1,5 @@
 const Logger = require('../utils/logger');
+const _ = require('lodash');
 
 module.exports = async (client, message) => {
     if (message.author.bot) return
@@ -24,6 +25,8 @@ module.exports = async (client, message) => {
     return message.channel.send("This command is unavailable via private message. Please run this command in a guild.");
 
     Logger.log(`[COMMAND] ${message.author.username}(${message.author.id}) ran command ${cmd.settings.name}`)
+
+    message.content = _.replace(message.content, `${settings.prefix} ${command} `, '');
 
     cmd.run(client, message, args);
 }
