@@ -33,7 +33,8 @@ const createEmbedForStatistics = (statistics) => {
         .setDescription(`Showing player points gained on ${statistics.date} ${statistics.time}`)
         .addField('**⚔ Best attackers**', attackers, true)
         .addField('**🛡 Best defenders**', defenders, true)
-        .addField('\u200B', `[See more 📈](https://grepodata.com/points/${statistics.world})`, false);
+        .addField('\u200B', `[See more 📈](https://grepodata.com/points/${statistics.world})`, false)
+        .setFooter(`next update: ${statistics.nextUpdate}`);
 
     return embed;
 };
