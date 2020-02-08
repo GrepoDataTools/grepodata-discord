@@ -20,7 +20,9 @@ async function loadBot() {
     client.aliases = new Enmap();
     client.settings = new Enmap({ name: 'settings' })
 
-    require('./load-commands')(client, `./commands`);
+    require('./settings')(client);
+    require('./commands')(client, `./commands`);
+    require('./events')(client);
 
     client.login(process.env.BOT_TOKEN)
         .then(() => Logger.ready(`Bot successfully logged as ${client.user.username}[${client.user.id}].`))

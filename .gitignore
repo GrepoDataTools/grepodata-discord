@@ -5,6 +5,9 @@
 # Environment file
 .env
 
+# Database 
+data/*
+
 # Logs
 logs
 *.log
