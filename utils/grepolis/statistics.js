@@ -13,7 +13,9 @@ const createEmbedForStatistics = (statistics) => {
         if (place === 2) stat.emoji = ':second_place:';
         if (place === 3) stat.emoji = ':third_place:';
 
-        attackers += `${stat.emoji ? stat.emoji : `#${place}.`} ${stat.n} - ${stat.s}\n`;
+        attackers += `${stat.emoji ? stat.emoji : `#${place}.`} [${stat.n}](https://grepodata.com/player/${
+            statistics.world
+        }/${stat.i}) - ${stat.s}\n`;
     });
 
     statistics.def.slice(0, 10).map((stat, index) => {
@@ -23,7 +25,9 @@ const createEmbedForStatistics = (statistics) => {
         if (place === 2) stat.emoji = ':second_place:';
         if (place === 3) stat.emoji = ':third_place:';
 
-        defenders += `${stat.emoji ? stat.emoji : `#${place}.`} ${stat.n} - ${stat.s}\n`;
+        defenders += `${stat.emoji ? stat.emoji : `#${place}.`} [${stat.n}](https://grepodata.com/player/${
+            statistics.world
+        }/${stat.i}) - ${stat.s}\n`;
     });
 
     embed
