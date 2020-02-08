@@ -13,7 +13,9 @@ const createEmbedForStatistics = (statistics) => {
         if (place === 2) stat.emoji = ':second_place:';
         if (place === 3) stat.emoji = ':third_place:';
 
-        attackers += `${stat.emoji ? stat.emoji : `#${place}.`} ${stat.n} - ${stat.s}\n`;
+        attackers += `${stat.emoji ? stat.emoji : `#${place}.`} [${stat.n}](https://grepodata.com/player/${
+            statistics.world
+        }/${stat.i}) - ${stat.s}\n`;
     });
 
     statistics.def.slice(0, 10).map((stat, index) => {
@@ -23,7 +25,9 @@ const createEmbedForStatistics = (statistics) => {
         if (place === 2) stat.emoji = ':second_place:';
         if (place === 3) stat.emoji = ':third_place:';
 
-        defenders += `${stat.emoji ? stat.emoji : `#${place}.`} ${stat.n} - ${stat.s}\n`;
+        defenders += `${stat.emoji ? stat.emoji : `#${place}.`} [${stat.n}](https://grepodata.com/player/${
+            statistics.world
+        }/${stat.i}) - ${stat.s}\n`;
     });
 
     embed
@@ -33,7 +37,8 @@ const createEmbedForStatistics = (statistics) => {
         .setDescription(`Showing player points gained on ${statistics.date} ${statistics.time}`)
         .addField('**⚔ Best attackers**', attackers, true)
         .addField('**🛡 Best defenders**', defenders, true)
-        .addField('\u200B', `[See more 📈](https://grepodata.com/points/${statistics.world})`, false);
+        .addField('\u200B', `[See more 📈](https://grepodata.com/points/${statistics.world})`, false)
+        .setFooter(`next update: ${statistics.nextUpdate}`);
 
     return embed;
 };
