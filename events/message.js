@@ -68,5 +68,5 @@ module.exports = async (client, message) => {
     message.content = _.replace(message.content, `${settings.prefix} ${command}`, '');
     message.content = _.trimStart(message.content);
 
-    cmd.run(client, message, args);
+    cmd.run(client, message, args, command);
 };
