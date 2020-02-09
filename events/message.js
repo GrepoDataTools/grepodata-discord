@@ -50,6 +50,21 @@ module.exports = async (client, message) => {
         if (!indexExists) return;
     }
 
+    if (cmd.config.serverRequired) {
+        indexExists = await axios
+            .get(`${process.env.BACKEND_URL}/discord/guild_settings?guild=${message.guild.id}`)
+            .then((response) => {
+                message.guild.server = response.data.server;
+                return true;
+            })
+            .catch(() => {
+                message.reply(`To use this command please set guild\'s server by running ${settings.prefix} server`);
+                return false;
+            });
+
+        if (!indexExists) return;
+    }
+
     message.content = _.replace(message.content, `${settings.prefix} ${command} `, '');
 
     cmd.run(client, message, args);
