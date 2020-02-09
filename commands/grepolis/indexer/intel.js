@@ -14,7 +14,7 @@ exports.run = async (client, message) => {
 
                 message.channel.send(embed);
             })
-            .catch((e) => console.log(e));
+            .catch(() => message.channel.send(`Could not find indexed reports for this city.`));
     } else {
         await axios
             .get(`${process.env.BACKEND_URL}/indexer/api/town?key=${message.guild.index}&name=${message.content}`)

@@ -28,7 +28,7 @@ module.exports = async (client, message) => {
         return;
     }
 
-    if (cmd && !message.guild && cmd.conf.guildOnly)
+    if (cmd && !message.guild && cmd.config.guildOnly)
         return message.channel.send(
             'This command is unavailable via private message. Please run this command in a guild.'
         );
@@ -68,5 +68,5 @@ module.exports = async (client, message) => {
     message.content = _.replace(message.content, `${settings.prefix} ${command}`, '');
     message.content = _.trimStart(message.content);
 
-    cmd.run(client, message, args);
+    cmd.run(client, message, args, command);
 };
