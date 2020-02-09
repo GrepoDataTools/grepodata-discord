@@ -33,5 +33,8 @@ exports.config = {
 };
 
 exports.settings = {
-    name: 'intel'
+    name: 'intel',
+    description: 'Shows available intel for a city',
+    usage: 'intel [city bb code]',
+    category: 'Indexer'
 };

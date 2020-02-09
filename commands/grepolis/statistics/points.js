@@ -27,5 +27,8 @@ exports.config = {
     aliases: ['score', 'today', 'now', 'yesterday', 'prev']
 };
 exports.settings = {
-    name: 'points'
+    name: 'points',
+    description: 'Shows worlds statistics',
+    usage: 'points (or) points [world - eg. en113]',
+    category: 'Statistics'
 };

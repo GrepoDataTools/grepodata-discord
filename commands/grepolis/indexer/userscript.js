@@ -32,5 +32,8 @@ exports.config = {
     aliases: []
 };
 exports.settings = {
-    name: 'userscript'
+    name: 'userscript',
+    description: 'Helps to set indexer',
+    usage: 'userscript',
+    category: 'Indexer'
 };
