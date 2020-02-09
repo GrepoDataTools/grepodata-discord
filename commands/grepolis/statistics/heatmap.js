@@ -5,19 +5,33 @@ const axios = require('axios');
  * @todo World is hardcoded, re-write once backend is able to send guild's world.
  */
 exports.run = async (client, message) => {
-    if (message.content.match(/\[player\][0-9]+\[\/player\]/)) {
-        message.content = message.content.replace('[player]', '').replace('[/player]', '');
+    if (message.content.match(/\[player\].*\[\/player\]/)) {
+        message.content = message.content
+            .replace('[player]', '')
+            .replace('[/player]', '')
+            .toLowerCase();
     }
 
     if (message.content.match(/^[0-9]+$/)) {
         await axios
-            .get(`${process.env.BACKEND_URL}/player/info?world=us86&&id=${message.content}`)
+            .get(`${process.env.BACKEND_URL}/player/info?world=${message.guild.server}&id=${message.content}`)
             .then(async (response) => {
                 const heatmap = await createHeatmapChartForPlayer(response.data);
 
                 message.channel.send(`Heatmap for player ${heatmap.player}`, heatmap.image);
             })
-            .catch((e) => console.log(e));
+            .catch(() => message.channel.send(`Could not find player with id ${message.content}`));
+    } else {
+        await axios
+            .get(
+                `${process.env.BACKEND_URL}/player/search?query=${message.content}&from=0&size=1&sql=true&world=${message.guild.server}`
+            )
+            .then(async (response) => {
+                const heatmap = await createHeatmapChartForPlayer(response.data.results[0]);
+
+                message.channel.send(`Heatmap for player ${heatmap.player}`, heatmap.image);
+            })
+            .catch(() => message.channel.send(`Could not find player with name ${message.content}`));
     }
 };
 
