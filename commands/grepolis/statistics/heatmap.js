@@ -41,5 +41,8 @@ exports.config = {
 };
 
 exports.settings = {
-    name: 'heatmap'
+    name: 'heatmap',
+    description: 'Shows activity of a player.',
+    usage: 'heatmap [player bb code]',
+    category: 'Statistics'
 };
