@@ -13,9 +13,9 @@ exports.run = async (client, message) => {
         await axios
             .get(`${process.env.BACKEND_URL}/player/info?world=us86&&id=${message.content}`)
             .then(async (response) => {
-                const heatmapImage = await createHeatmapChartForPlayer(response.data);
+                const heatmap = await createHeatmapChartForPlayer(response.data);
 
-                message.channel.send('', heatmapImage);
+                message.channel.send(`Heatmap for player ${heatmap.player}`, heatmap.image);
             })
             .catch((e) => console.log(e));
     }

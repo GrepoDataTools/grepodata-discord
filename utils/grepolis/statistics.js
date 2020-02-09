@@ -80,16 +80,19 @@ const createEmbedForIndexedCity = (statistics, index) => {
 };
 
 const createHeatmapChartForPlayer = async (statistics) => {
-    const data = Object.values(statistics.heatmap.hour).map((activity) => activity);
+    let heatmapData = [];
+    for (i = 0; i <= 24; i++) {
+        statistics.heatmap.hour[`${i}`] ? heatmapData.push(statistics.heatmap.hour[`${i}`]) : heatmapData.push(0);
+    }
 
     const canvasRenderService = new CanvasRenderService(700, 700);
     const image = await canvasRenderService.renderToBuffer({
         type: 'bar',
         data: {
-            labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+            labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
             datasets: [
                 {
-                    data: data,
+                    data: heatmapData,
                     backgroundColor: '#009688'
                 }
             ]
@@ -117,7 +120,10 @@ const createHeatmapChartForPlayer = async (statistics) => {
         }
     });
 
-    return new Attachment(image, 'heatmap.jpg');
+    return {
+        player: statistics.name,
+        image: new Attachment(image, 'heatmap.jpg')
+    };
 };
 
 module.exports = {
