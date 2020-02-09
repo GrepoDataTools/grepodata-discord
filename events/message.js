@@ -17,7 +17,7 @@ module.exports = async (client, message) => {
         .slice(settings.prefix.length)
         .trim()
         .split(/ +/g);
-    const command = args.shift().toLowerCase();
+    const command = args.shift();
 
     if (message.guild && !message.member) await message.guild.fetchMember(message.author);
 
