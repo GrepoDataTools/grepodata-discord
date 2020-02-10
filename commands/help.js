@@ -32,9 +32,11 @@ exports.run = async (client, message) => {
                 currentCategory = cat;
             }
 
-            output += `${message.settings.prefix} ${command.settings.name}${' '.repeat(
+            if (!command.settings.helpHidden || command.settings.helpHidden === false) {
+              output += `${message.settings.prefix} ${command.settings.name}${' '.repeat(
                 longest - command.settings.name.length
-            )} :: ${command.settings.description ? `${command.settings.description}` : 'No description available'}\n`;
+              )} :: ${command.settings.description ? `${command.settings.description}` : 'No description available'}\n`;
+            }
         });
 
         return message.channel.send(output, { code: 'asciidoc', split: { char: '\u200b' } });

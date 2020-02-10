@@ -20,7 +20,7 @@ exports.run = async (client, message) => {
 
                 message.channel.send(`Heatmap for player ${heatmap.player}`, heatmap.image);
             })
-            .catch(() => message.channel.send(`Could not find player with id ${message.content}`));
+            .catch(() => message.channel.send(`Could not find player with id ${message.content} in world ${message.guild.server}`));
     } else {
         await axios
             .get(
@@ -31,7 +31,7 @@ exports.run = async (client, message) => {
 
                 message.channel.send(`Heatmap for player ${heatmap.player}`, heatmap.image);
             })
-            .catch(() => message.channel.send(`Could not find player with name ${message.content}`));
+            .catch(() => message.channel.send(`Could not find player with name ${message.content} in world ${message.guild.server}`));
     }
 };
 

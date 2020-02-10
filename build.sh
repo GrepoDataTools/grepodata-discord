@@ -1,37 +1,40 @@
-#! /bin/bash
+#!/bin/bash
 timestamp=$(date +%y%m%d_%H%M%S)
 
 # Make dir
+cd "/home/vps/grepodata/production/grepodata-discord"
 dirname="dist_v${timestamp}"
 echo "=== Creating new directory: ${dirname}"
-mkdir "$dirname"
-chown vps:vps "$dirname"
+mkdir "$dirname" || exit 1
 
 # Clone repo
 echo "=== Cloning grepodata-discord to directory: ${dirname}"
 cd "$dirname"
-#sudo -u vps git clone git@github.com:CamielK/grepodata-discord.git .
-sudo -u vps git clone git@github.com:grepodata/grepodata-discord.git .
+git init .
+git remote add -t \* -f origin https://github.com/grepodata/grepodata-discord/ || exit "$?"
+git checkout master || exit "$?"
 git log -1
 
 # npm install
 echo "=== Running npm install"
-source ~/.nvm/nvm.sh;
-npm install
+source /home/vps/.nvm/nvm.sh;
+nvm use 13.8
+npm install || exit "$?"
 
 # Update active
 echo "=== Updating active syslink to: ${dirname}"
-cd /home/vps/gd-discord
+cd "/home/vps/grepodata/production/grepodata-discord"
+cp .env "$dirname/.env" || exit "$?"
 rm active
 ln -s "$dirname" active
 
 # Restart app
 echo "=== Restarting app"
-pm2 reload gd-discord
+pm2 reload "grepodata-discord-prod"
 #pm2 stop gd-discord
-#pm2 start active/bot.js --name gd-discord -i 1
-pm2 save
-pm2 list
+#pm2 start index.js --name grepodata-discord-prod --interpreter "node@13.8.0" --cwd active/
+#pm2 save
+#pm2 list
 
 echo "=== Done!"
 exit
