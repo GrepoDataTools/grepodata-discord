@@ -11,7 +11,7 @@ module.exports = async (client, message) => {
 
     const mention = new RegExp(`^<@!?${client.user.id}>( |)$`);
 
-    if (message.content.match(mention)) return message.reply(`Profix for this guild is \`${settings.prefix}\``);
+    if (message.content.match(mention)) return message.reply(`Prefix for this guild is \`${settings.prefix}\``);
 
     const args = message.content
         .slice(settings.prefix.length)
