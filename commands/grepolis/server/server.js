@@ -33,7 +33,7 @@ exports.run = async (client, message) => {
 };
 
 exports.config = {
-    aliases: ['setserver', 'setServer', 'set_server']
+    aliases: ['setserver', 'setServer', 'set_server', 'world', 'setWorld']
 };
 exports.settings = {
     name: 'server',
