@@ -2,7 +2,7 @@ const { RichEmbed } = require('discord.js');
 const { CanvasRenderService } = require('chartjs-node-canvas');
 const { Attachment } = require('discord.js');
 
-const createEmbedForStatistics = (statistics) => {
+const createEmbedForStatistics = (statistics, is_today) => {
     let attackers = '',
         defenders = '';
 
@@ -36,11 +36,13 @@ const createEmbedForStatistics = (statistics) => {
         .setTitle('🏆 Daily scoreboard for ' + statistics.world)
         .setURL(`https://grepodata.com/points/${statistics.world}`)
         .setColor(0x18bc9c)
-        .setDescription(`Showing player points gained on ${statistics.date} ${statistics.time}`)
+        .setDescription(`Showing player points gained on ${statistics.date} ` + (is_today?`before ${statistics.time}`:'(**yesterday**)'))
         .addField('**⚔ Best attackers**', attackers, true)
         .addField('**🛡 Best defenders**', defenders, true)
-        .addField('\u200B', `[See more 📈](https://grepodata.com/points/${statistics.world})`, false)
-        .setFooter(`next update: ${statistics.nextUpdate}`);
+        .addField('\u200B', `[See more 📈](https://grepodata.com/points/${statistics.world})`, false);
+    if (is_today) {
+        embed.setFooter(`next update: ${statistics.nextUpdate}`);
+    }
 
     return embed;
 };

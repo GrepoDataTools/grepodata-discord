@@ -8,18 +8,18 @@ exports.run = async (client, message, args, command) => {
     if (world) {
         await axios
             .get(
-                `${process.env.BACKEND_URL}/scoreboard/player?world=${message.content}&guild=${message.guild.id}${yesterday}`
+                `${process.env.BACKEND_URL}/scoreboard/player?world=${message.content}&guild=${message.guild.id}${yesterday}&minimal=true`
             )
             .then((response) => {
-                const embed = createEmbedForStatistics(response.data);
+                const embed = createEmbedForStatistics(response.data, yesterday==='');
                 message.channel.send(embed);
             })
             .catch(() => message.channel.send(`Something went wrong. Please try again later.`));
     } else {
         await axios
-            .get(`${process.env.BACKEND_URL}/scoreboard/player?guild=${message.guild.id}${yesterday}`)
+            .get(`${process.env.BACKEND_URL}/scoreboard/player?guild=${message.guild.id}${yesterday}&minimal=true`)
             .then((response) => {
-                const embed = createEmbedForStatistics(response.data);
+                const embed = createEmbedForStatistics(response.data, yesterday==='');
                 message.channel.send(embed);
             })
             .catch(() => message.channel.send(`Something went wrong. Please try again later.`));
