@@ -23,8 +23,8 @@ exports.run = async (client, message) => {
                   data.intel.player_name
                   }](https://grepodata.com/indexer/player/${data.index}/${data.world}/${
                   data.intel.player_id
-                  })`
-              )
+                  }) BB: [town]${data.intel.town_id}[/town]`
+              );
           }
           message.channel.send(embed);
         } else if (data.success === false && data.error_code) {
