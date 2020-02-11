@@ -1,5 +1,6 @@
 const { createHeatmapChartForPlayer } = require('../../../utils/grepolis/statistics');
 const axios = require('axios');
+const Logger = require('../../../utils/logger');
 
 /**
  * @todo World is hardcoded, re-write once backend is able to send guild's world.
@@ -18,7 +19,13 @@ exports.run = async (client, message) => {
             .then(async (response) => {
                 const heatmap = await createHeatmapChartForPlayer(response.data);
 
-                message.channel.send(`Heatmap for player ${heatmap.player}`, heatmap.image);
+                message.channel.send(`Heatmap for player ${heatmap.player}`, heatmap.image)
+                    .catch(error => {
+                        Logger.log(error.message);
+                        if (error.message == 'Missing Permissions') {
+                            message.channel.send(`Sorry, I can not do that. This Discord server does not allow me to upload attachments :(`)
+                        }
+                    });
             })
             .catch(() => message.channel.send(`Could not find player with id ${message.content} in world ${message.guild.server}`));
     } else {
@@ -29,7 +36,13 @@ exports.run = async (client, message) => {
             .then(async (response) => {
                 const heatmap = await createHeatmapChartForPlayer(response.data.results[0]);
 
-                message.channel.send(`Heatmap for player ${heatmap.player}`, heatmap.image);
+                message.channel.send(`Heatmap for player ${heatmap.player}`, heatmap.image)
+                    .catch(error => {
+                        Logger.log(error.message);
+                        if (error.message == 'Missing Permissions') {
+                            message.channel.send(`Sorry, I can not do that. This Discord server does not allow me to upload attachments :(`)
+                        }
+                    });
             })
             .catch(() => message.channel.send(`Could not find player with name ${message.content} in world ${message.guild.server}`));
     }

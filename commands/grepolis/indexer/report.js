@@ -3,9 +3,9 @@ const { RichEmbed } = require('discord.js');
 const Logger = require('../../../utils/logger');
 
 exports.run = async (client, message) => {
-  if (message.content.length > 24 || /^\[report\].*\[\/report\]$/.test(message.content)) {
+  if (isNaN(message.content) || message.content.length > 24) {
     // Too long or contains BBcode.. invalid!
-    message.channel.send(`${message.content} is not a valid report hash. You need to install the GrepoData indexer userscript to share reports.`);
+    message.channel.send(`${message.content} is not a valid report hash. You need to install the GrepoData indexer userscript to share reports (https://grepodata.com/indexer).`);
   } else {
     get(`${process.env.BACKEND_URL}/discord/hash?guild=${message.guild.id}&hash=${message.content}`)
       .then((response) => {
