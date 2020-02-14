@@ -87,7 +87,7 @@ const createHeatmapChartForPlayer = async (statistics) => {
         statistics.heatmap.hour[`${i}`] ? heatmapData.push(statistics.heatmap.hour[`${i}`]) : heatmapData.push(0);
     }
 
-    const canvasRenderService = new CanvasRenderService(700, 700);
+    const canvasRenderService = new CanvasRenderService(900, 700);
     const image = await canvasRenderService.renderToBuffer({
         type: 'bar',
         data: {
@@ -104,6 +104,12 @@ const createHeatmapChartForPlayer = async (statistics) => {
             scales: {
                 xAxes: [
                     {
+                        scaleLabel: {
+                            display: true,
+                            fontColor: '#009688',
+                            fontSize: 22,
+                            labelString: 'Hour of day'
+                        },
                         ticks: {
                             fontColor: '#009688',
                             fontSize: 15
@@ -112,7 +118,15 @@ const createHeatmapChartForPlayer = async (statistics) => {
                 ],
                 yAxes: [
                     {
-                        display: false
+                        scaleLabel: {
+                            display: true,
+                            fontColor: '#009688',
+                            fontSize: 22,
+                            labelString: 'Relative activity'
+                        },
+                        ticks: {
+                            display: false,
+                        }
                     }
                 ]
             },
