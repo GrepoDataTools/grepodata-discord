@@ -1,13 +1,15 @@
 const { get } = require('axios');
 
 exports.run = async (client, message) => {
-    console.log(message.content);
+    let indexKey = message.content;
+    indexKey = indexKey.replace('[', '');
+    indexKey = indexKey.replace(']', '');
     if (message.content.length !== 8)
         return message.reply('`Invalid index key. Please run command again with valid key.`');
 
-    await get(`${process.env.BACKEND_URL}/discord/set_index?guild=${message.guild.id}&index=${message.content}`)
+    await get(`${process.env.BACKEND_URL}/discord/set_index?guild=${message.guild.id}&index=${indexKey}`)
         .then(() => {
-            message.reply(`\`Index for this guild was successfully set to ${message.content}\``);
+            message.reply(`\`Index for this guild was successfully set to ${indexKey}\``);
         })
         .catch((error) => {
             const { data } = error.response;

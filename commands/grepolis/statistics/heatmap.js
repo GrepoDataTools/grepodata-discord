@@ -24,7 +24,7 @@ exports.run = async (client, message) => {
                   .setTitle(`Heatmap for player: ${heatmap.player}`)
                   .attachFile(heatmap.image)
                   .setImage('attachment://heatmap.jpg')
-                  .setURL(`https://grepodata.com/player/${message.guild.server}/${message.content}`)
+                  .setURL(`${process.env.FRONTEND_URL}/player/${message.guild.server}/${message.content}`)
                   .setFooter("A player is considered 'active' when they gain attack points");
 
                 message.channel.send({embed})
@@ -54,7 +54,7 @@ exports.run = async (client, message) => {
                   .setTitle(`Heatmap for player: ${player.name}`)
                   .attachFile(heatmap.image)
                   .setImage('attachment://heatmap.jpg')
-                  .setURL(`https://grepodata.com/player/${player.world}/${player.id}`)
+                  .setURL(`${process.env.FRONTEND_URL}/player/${player.world}/${player.id}`)
                   .setFooter("A player is considered 'active' when they gain attack points");
 
                 message.channel.send({embed})

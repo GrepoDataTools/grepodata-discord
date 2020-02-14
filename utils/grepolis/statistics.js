@@ -15,7 +15,7 @@ const createEmbedForStatistics = (statistics, is_today) => {
         if (place === 2) stat.emoji = ':second_place:';
         if (place === 3) stat.emoji = ':third_place:';
 
-        attackers += `${stat.emoji ? stat.emoji : `#${place}.`} [${stat.n}](https://grepodata.com/player/${
+        attackers += `${stat.emoji ? stat.emoji : `#${place}.`} [${stat.n}](${process.env.FRONTEND_URL}/player/${
             statistics.world
         }/${stat.i}) - ${stat.s}\n`;
     });
@@ -27,19 +27,19 @@ const createEmbedForStatistics = (statistics, is_today) => {
         if (place === 2) stat.emoji = ':second_place:';
         if (place === 3) stat.emoji = ':third_place:';
 
-        defenders += `${stat.emoji ? stat.emoji : `#${place}.`} [${stat.n}](https://grepodata.com/player/${
+        defenders += `${stat.emoji ? stat.emoji : `#${place}.`} [${stat.n}](${process.env.FRONTEND_URL}/player/${
             statistics.world
         }/${stat.i}) - ${stat.s}\n`;
     });
 
     embed
         .setTitle('🏆 Daily scoreboard for ' + statistics.world)
-        .setURL(`https://grepodata.com/points/${statistics.world}`)
+        .setURL(`${process.env.FRONTEND_URL}/points/${statistics.world}`)
         .setColor(0x18bc9c)
         .setDescription(`Showing player points gained on ${statistics.date} ` + (is_today?`before ${statistics.time}`:'(**yesterday**)'))
         .addField('**⚔ Best attackers**', attackers, true)
         .addField('**🛡 Best defenders**', defenders, true)
-        .addField('\u200B', `[See more 📈](https://grepodata.com/points/${statistics.world})`, false);
+        .addField('\u200B', `[See more 📈](${process.env.FRONTEND_URL}/points/${statistics.world})`, false);
     if (is_today) {
         embed.setFooter(`next update: ${statistics.nextUpdate}`);
     }
@@ -61,20 +61,20 @@ const createEmbedForIndexedCity = (statistics, index) => {
 
     embed
         .setTitle(`🏛️ Town intelligence: ${statistics.name}`)
-        .setURL(`https://grepodata.com/indexer/town/${index}/${statistics.world}/${statistics.town_id}`)
+        .setURL(`${process.env.FRONTEND_URL}/indexer/town/${index}/${statistics.world}/${statistics.town_id}`)
         .setColor(0x18bc9c)
         .setDescription(
-            `Index: [${index}](https://grepodata.com/indexer/${index}) Player: [${
+            `Index: [${index}](${process.env.FRONTEND_URL}/indexer/${index}) Player: [${
                 statistics.player_name
-            }](https://grepodata.com/indexer/player/${index}/${statistics.world}/${
+            }](${process.env.FRONTEND_URL}/indexer/player/${index}/${statistics.world}/${
                 statistics.player_id
             }) ${statistics.alliance_id &&
-                `Alliance: [show alliance intel](https://grepodata.com/indexer/alliance/${index}/${statistics.world}/${statistics.alliance_id})`}`
+                `Alliance: [show alliance intel](${process.env.FRONTEND_URL}/indexer/alliance/${index}/${statistics.world}/${statistics.alliance_id})`}`
         )
         .addField(`Troop intelligence [town]${statistics.town_id}[/town]`, intel, false)
         .addField(
             '\u200B',
-            `[See more](https://grepodata.com/indexer/town/${index}/${statistics.world}/${statistics.town_id})`,
+            `[See more](${process.env.FRONTEND_URL}/indexer/town/${index}/${statistics.world}/${statistics.town_id})`,
             false
         );
 

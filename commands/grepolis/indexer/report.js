@@ -21,19 +21,32 @@ exports.run = async (client, message) => {
               .setDescription(
                 `Index: [${data.index}](${process.env.FRONTEND_URL}/indexer/${data.index}) Player: [${
                   data.intel.player_name
-                  }](https://grepodata.com/indexer/player/${data.index}/${data.world}/${
+                  }](${process.env.FRONTEND_URL}/indexer/player/${data.index}/${data.world}/${
                   data.intel.player_id
-                  }) BB: [town]${data.intel.town_id}[/town]`
+                  }) BB: \`[town]${data.intel.town_id}[/town]\``
               );
           } else {
-              embed.setFooter(`Hint: use **!gd index [your_index_key]** to link your city index`);
+              embed.addField('Hint: link your index to this Discord server',`use \`!gd index [your_index_key]\` to link your city index`,false);
+              // if (data.bb && data.bb.length > 0) {
+              //     let bbText = '';
+              //     data.bb.forEach(bb => {
+              //         if (bb.tp && bb.tp === 'town') {
+              //             bbText += `\`[town]${bb.id}[/town]\` ${bb.name}\n`
+              //         } else if (!bb.tp && bb.id && bb.name) {
+              //             bbText += `\`[player]${bb.id}[/player]\` ${bb.name}\n`
+              //         }
+              //     })
+              //     if (bbText!='') {
+              //         embed.setFooter(bbText);
+              //     }
+              // }
           }
           message.channel.send(embed);
         } else if (data.success === false && data.error_code) {
           let response_message = '';
           switch (data.error_code) {
             case 5001:
-              response_message = `You need to set a default index before you can share reports (!gd index [your_index_key]).`
+              response_message = `You need to set a default index before you can share reports (\`!gd index [your_index_key]\`).`
               break;
             case 5003:
               response_message = `This report has not yet been indexed. You can only share indexed reports.`
@@ -50,7 +63,7 @@ exports.run = async (client, message) => {
         }
       })
       .catch((err) => {
-        Logger.log(JSON.stringify(err));
+        Logger.log(err.message);
         message.channel.send('Sorry, I could not create an image for this report hash, try again later.');
       });
   }
