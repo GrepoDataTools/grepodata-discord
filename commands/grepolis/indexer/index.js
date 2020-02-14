@@ -4,7 +4,7 @@ exports.run = async (client, message) => {
     let indexKey = message.content;
     indexKey = indexKey.replace('[', '');
     indexKey = indexKey.replace(']', '');
-    if (message.content.length !== 8)
+    if (indexKey.length !== 8)
         return message.reply('`Invalid index key. Please run command again with valid key.`');
 
     await get(`${process.env.BACKEND_URL}/discord/set_index?guild=${message.guild.id}&index=${indexKey}`)
