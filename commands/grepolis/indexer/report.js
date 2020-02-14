@@ -16,15 +16,17 @@ exports.run = async (client, message) => {
           embed.setImage(response.data.url);
           if (data.intel) {
             embed.setTitle(`🏛️ Enemy town: ${data.intel.town_name}`)
-              .setURL(`https://grepodata.com/indexer/town/${data.index}/${data.world}/${data.intel.town_id}`)
+              .setURL(`${process.env.FRONTEND_URL}/indexer/town/${data.index}/${data.world}/${data.intel.town_id}`)
               .setColor(0x18bc9c)
               .setDescription(
-                `Index: [${data.index}](https://grepodata.com/indexer/${data.index}) Player: [${
+                `Index: [${data.index}](${process.env.FRONTEND_URL}/indexer/${data.index}) Player: [${
                   data.intel.player_name
                   }](https://grepodata.com/indexer/player/${data.index}/${data.world}/${
                   data.intel.player_id
                   }) BB: [town]${data.intel.town_id}[/town]`
               );
+          } else {
+              embed.setFooter(`Hint: use **!gd index [your_index_key]** to link your city index`);
           }
           message.channel.send(embed);
         } else if (data.success === false && data.error_code) {
