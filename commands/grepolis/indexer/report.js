@@ -25,7 +25,7 @@ exports.run = async (client, message) => {
                   data.intel.player_id
                   }) BB: \`[town]${data.intel.town_id}[/town]\``
               );
-          } else {
+          } else if (!data.index) {
               embed.addField('Hint: link your index to this Discord server',`use \`!gd index [your_index_key]\` to link your city index`,false);
               // if (data.bb && data.bb.length > 0) {
               //     let bbText = '';
