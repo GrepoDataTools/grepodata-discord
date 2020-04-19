@@ -195,7 +195,7 @@ client.on('message', message => {
         request.get(opts, function (error, response, body) {
           if (response && response.statusCode && response.statusCode === 200) {
             let scoreboard = JSON.parse(response.body);
-            let boardUrl = 'https://grepodata.com/points/' + scoreboard.world;
+            let boardUrl = 'https://grepodata.com/points?world=' + scoreboard.world;
             const embed = new RichEmbed()
               .setTitle('🏆 Daily scoreboard for ' + scoreboard.world)
               .setURL(boardUrl)
@@ -206,12 +206,12 @@ client.on('message', message => {
             }
             let att_txt = '';
             scoreboard.att.slice(0, 10).forEach(function (player, i) {
-              att_txt += '#' + (i + 1) + ' - ' + player.s + ' - ' + '[' + escapeMarkdown(player.n) + ']' + '(https://grepodata.com/player/' + scoreboard.world + '/' + player.i + ')' + '\n';
+              att_txt += '#' + (i + 1) + ' - ' + player.s + ' - ' + '[' + escapeMarkdown(player.n) + ']' + '(https://grepodata.com/player?world=' + scoreboard.world + '&id=' + player.i + ')' + '\n';
             });
             embed.addField('**⚔ Best attackers**', att_txt, true);
             let def_txt = '';
             scoreboard.def.slice(0, 10).forEach(function (player, i) {
-              def_txt += '#' + (i + 1) + ' - ' + player.s + ' - ' + '[' + escapeMarkdown(player.n) + ']' + '(https://grepodata.com/player/' + scoreboard.world + '/' + player.i + ')' + '\n';
+              def_txt += '#' + (i + 1) + ' - ' + player.s + ' - ' + '[' + escapeMarkdown(player.n) + ']' + '(https://grepodata.com/player?world=' + scoreboard.world + '&id=' + player.i + ')' + '\n';
             });
             embed.addField('**🛡 Best defenders**', def_txt, true);
             embed.addField('\u200B', '[See more 📈](' + boardUrl + ')', false);
