@@ -14,7 +14,7 @@ exports.run = async (client, message) => {
             .toLowerCase();
     }
 
-    if (message.content.match(/^[0-9]+$/)) {
+    if (!isNaN(message.content)) {
         await axios
             .get(`${process.env.BACKEND_URL}/player/info?world=${message.guild.server}&id=${message.content}`)
             .then(async (response) => {
@@ -39,38 +39,47 @@ exports.run = async (client, message) => {
             })
             .catch((error) => {
               Logger.log(error.message);
-              message.channel.send(`Could not find player with id ${message.content} in world ${message.guild.server}`)
+              message.channel.send(`Could not find player with id **${message.content}** in world **${message.guild.server}**. Use command \`!gd server [WORLD]\` to change the default world for this guild.`)
             });
     } else {
+        const serverName = message.guild.server.substring(0,2);
+        const heatmapSearchUri = `${process.env.BACKEND_URL}/player/search?query=${encodeURI(message.content)}&from=0&size=1&sql=true&preferred_server=${serverName}`;
+        Logger.log(heatmapSearchUri);
         await axios
             .get(
-                `${process.env.BACKEND_URL}/player/search?query=${message.content}&from=0&size=1&sql=true&world=${message.guild.server}`
+                heatmapSearchUri
             )
             .then(async (response) => {
+                Logger.log(JSON.stringify(response.data.results[0]));
                 const player = response.data.results[0];
-                const heatmap = await createHeatmapChartForPlayer(player);
-
                 const embed = new RichEmbed()
-                  .setTitle(`Heatmap for player: ${player.name}`)
-                  .attachFile(heatmap.image)
-                  .setImage('attachment://heatmap.jpg')
-                  .setURL(`${process.env.FRONTEND_URL}/player?world=${player.world}&id=${player.id}`)
-                  .setFooter("A player is considered 'active' when they gain attack points");
+                    .setTitle(`Heatmap for player: ${player.name} (server: ${serverName.toUpperCase()})`)
+                    .setURL(`${process.env.FRONTEND_URL}/player?world=${player.world}&id=${player.id}`)
+                    .setFooter("A player is considered 'active' when they gain attack points");
+                if (!player.heatmap || player.heatmap.length <= 0) {
+                    embed
+                        .setDescription(`Sorry, it appears [${player.name}](${process.env.FRONTEND_URL}/player?world=${player.world}&id=${player.id}) is not active enough to create a heatmap for.`)
+                } else {
+                    const heatmap = await createHeatmapChartForPlayer(player);
+                    embed
+                        .attachFile(heatmap.image)
+                        .setImage('attachment://heatmap.jpg')
+                }
 
                 message.channel.send({embed})
-                  .catch(error => {
-                    Logger.log(error.message);
-                    if (error.message === 'Missing Permissions') {
-                      message.channel.send(`Sorry, I can not do that. This Discord server does not allow me to upload attachments :(`)
-                    } else {
-                      message.channel.send(`Sorry, I can not do that right now`)
-                    }
-                  });
+                    .catch(error => {
+                        Logger.log(error.message);
+                        if (error.message === 'Missing Permissions') {
+                            message.channel.send(`Sorry, I can not do that. This Discord channel does not allow me to upload attachments :(`)
+                        } else {
+                            message.channel.send(`Sorry, I can not do that right now`)
+                        }
+                    });
 
             })
             .catch((error) => {
               Logger.log(error.message);
-              message.channel.send(`Could not find player with name ${message.content} in world ${message.guild.server} (use command \`!gd server [WORLD]\` to change the default world for this guild)`)
+              message.channel.send(`Could not find player with name **${message.content}** in world **${message.guild.server}**. Use command \`!gd server [WORLD]\` to change the default world for this guild.`)
             });
     }
 };

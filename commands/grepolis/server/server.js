@@ -1,10 +1,16 @@
 const axios = require('axios');
 
 exports.run = async (client, message) => {
+    if (message.content.match(/\[.*\]/)) {
+        message.content = message.content
+            .replace('[', '')
+            .replace(']', '')
+            .toLowerCase();
+    }
     const serverIndicator = message.content.toLowerCase().match(/^([a-z]{2})([0-9]{1,3})$/);
 
     if (!serverIndicator)
-        return message.channel.send(`Please enter valid world (eg. en100). ${message.content} is not valid world.`);
+        return message.channel.send(`Please enter valid world (eg. en124). ${message.content} is not valid world.`);
     const serverShortcut = serverIndicator[1];
     const serverNumber = serverIndicator[2];
 

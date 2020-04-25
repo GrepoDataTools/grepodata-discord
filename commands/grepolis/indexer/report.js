@@ -4,8 +4,8 @@ const Logger = require('../../../utils/logger');
 
 exports.run = async (client, message) => {
   if (message.content.length > 24 || !(/^r?m?-?\d{2,24}$/.test(message.content))) {
-    // Too long or contains invalid characters.. (hash must look like 'r1241241' or 'rm12312342' or '-1231231')
-    message.channel.send(`${message.content} is not a valid report hash. You need to install the GrepoData indexer userscript to share reports (https://grepodata.com/indexer).`);
+    // Too long or contains invalid characters.. (hash must look like 'r1241241' or 'rm12312342')
+    message.channel.send(`${message.content} is not a valid report hash. You should to install the GrepoData indexer userscript and use the code it gives you to share reports on Discord (https://grepodata.com/indexer).`);
   } else {
     get(`${process.env.BACKEND_URL}/discord/hash?guild=${message.guild.id}&hash=${message.content}`)
       .then((response) => {
