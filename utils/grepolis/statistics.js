@@ -29,7 +29,7 @@ const createEmbedForStatistics = (statistics, is_today) => {
 
         defenders += `${stat.emoji ? stat.emoji : `#${place}.`} [${stat.n}](${process.env.FRONTEND_URL}/player?world=${
             statistics.world
-        }id=${stat.i}) - ${stat.s}\n`;
+        }&id=${stat.i}) - ${stat.s}\n`;
     });
 
     embed

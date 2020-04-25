@@ -70,7 +70,7 @@ exports.run = async (client, message) => {
             })
             .catch((error) => {
               Logger.log(error.message);
-              message.channel.send(`Could not find player with name ${message.content} in world ${message.guild.server}`)
+              message.channel.send(`Could not find player with name ${message.content} in world ${message.guild.server} (use command \`!gd server [WORLD]\` to change the default world for this guild)`)
             });
     }
 };
