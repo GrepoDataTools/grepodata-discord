@@ -43,7 +43,7 @@ exports.run = async (client, message) => {
             });
     } else {
         const serverName = message.guild.server.substring(0,2);
-        const heatmapSearchUri = `${process.env.BACKEND_URL}/player/search?query=${encodeURI(message.content)}&from=0&size=1&sql=true&preferred_server=${serverName}`;
+        const heatmapSearchUri = `${process.env.BACKEND_URL}/player/search?query=${encodeURI(message.content)}&from=0&size=1&sql=true&server=${serverName}`;
         Logger.log(heatmapSearchUri);
         await axios
             .get(
@@ -52,8 +52,9 @@ exports.run = async (client, message) => {
             .then(async (response) => {
                 Logger.log(JSON.stringify(response.data.results[0]));
                 const player = response.data.results[0];
+                const playerServer = player.world.substring(0,2);
                 const embed = new RichEmbed()
-                    .setTitle(`Heatmap for player: ${player.name} (server: ${serverName.toUpperCase()})`)
+                    .setTitle(`Heatmap for player: ${player.name} (server: ${playerServer.toUpperCase()})`)
                     .setURL(`${process.env.FRONTEND_URL}/player?world=${player.world}&id=${player.id}`)
                     .setFooter("A player is considered 'active' when they gain attack points");
                 if (!player.heatmap || player.heatmap.length <= 0) {
@@ -79,7 +80,7 @@ exports.run = async (client, message) => {
             })
             .catch((error) => {
               Logger.log(error.message);
-              message.channel.send(`Could not find player with name **${message.content}** in world **${message.guild.server}**. Use command \`!gd server [WORLD]\` to change the default world for this guild.`)
+              message.channel.send(`Could not find player with name **${message.content}** in server **${serverName.toUpperCase()}**. Use command \`!gd server [WORLD]\` to change the preferred server for this guild.`)
             });
     }
 };

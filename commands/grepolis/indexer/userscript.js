@@ -29,7 +29,7 @@ exports.run = async (client, message) => {
 };
 
 exports.config = {
-    aliases: []
+    aliases: ['script', 'indexer']
 };
 exports.settings = {
     name: 'userscript',
