@@ -2,7 +2,7 @@ const { RichEmbed } = require('discord.js');
 const { CanvasRenderService } = require('chartjs-node-canvas');
 const { Attachment } = require('discord.js');
 
-const createEmbedForStatistics = (statistics, is_today) => {
+const createEmbedForStatistics = (statistics, is_today, boardtype) => {
     let attackers = '',
         defenders = '';
 
@@ -15,7 +15,7 @@ const createEmbedForStatistics = (statistics, is_today) => {
         if (place === 2) stat.emoji = ':second_place:';
         if (place === 3) stat.emoji = ':third_place:';
 
-        attackers += `${stat.emoji ? stat.emoji : `#${place}.`} [${stat.n}](${process.env.FRONTEND_URL}/player?world=${
+        attackers += `${stat.emoji ? stat.emoji : `#${place}.`} [${stat.n}](${process.env.FRONTEND_URL}/${boardtype}?world=${
             statistics.world
         }&id=${stat.i}) - ${stat.s}\n`;
     });
@@ -27,21 +27,22 @@ const createEmbedForStatistics = (statistics, is_today) => {
         if (place === 2) stat.emoji = ':second_place:';
         if (place === 3) stat.emoji = ':third_place:';
 
-        defenders += `${stat.emoji ? stat.emoji : `#${place}.`} [${stat.n}](${process.env.FRONTEND_URL}/player?world=${
+        defenders += `${stat.emoji ? stat.emoji : `#${place}.`} [${stat.n}](${process.env.FRONTEND_URL}/${boardtype}?world=${
             statistics.world
         }&id=${stat.i}) - ${stat.s}\n`;
     });
 
     embed
-        .setTitle('🏆 Daily scoreboard for ' + statistics.world)
+        .setTitle('🏆 Daily ' + boardtype + ' scoreboard for ' + statistics.world)
         .setURL(`${process.env.FRONTEND_URL}/points?world=${statistics.world}`)
         .setColor(0x18bc9c)
-        .setDescription(`Showing player points gained on ${statistics.date} ` + (is_today?`before ${statistics.time}`:'(**yesterday**)'))
+        .setDescription(`Showing ${boardtype} points gained on ${statistics.date} ` + (is_today?`before ${statistics.time}`:'(**yesterday**)'))
         .addField('**⚔ Best attackers**', attackers, true)
         .addField('**🛡 Best defenders**', defenders, true)
         .addField('\u200B', `[See more 📈](${process.env.FRONTEND_URL}/points?world=${statistics.world})`, false);
     if (is_today) {
-        embed.setFooter(`next update: ${statistics.nextUpdate}`);
+        let otherType = boardtype==='player'?'alliance':'player';
+        embed.setFooter(`next update: ${statistics.nextUpdate}. Use command '!gd today ${otherType}' to see ${otherType}s`);
     }
 
     return embed;
