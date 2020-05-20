@@ -33,9 +33,11 @@ exports.run = async (client, message) => {
             }
 
             if (!command.settings.helpHidden || command.settings.helpHidden === false) {
-              output += `${message.settings.prefix} ${command.settings.name}${' '.repeat(
-                longest - command.settings.name.length
-              )} :: ${command.settings.description ? `${command.settings.description}` : 'No description available'}\n`;
+                output += `${message.settings.prefix} ${command.settings.name}${' '.repeat(
+                    longest - command.settings.name.length
+                )} :: ${
+                    command.settings.description ? `${command.settings.description}` : 'No description available'
+                }\n`;
             }
         });
 
@@ -64,6 +66,7 @@ exports.config = {
 exports.settings = {
     name: 'help',
     description: 'Displays all available commands.',
+    permLevel: 'User',
     usage: 'help [command]',
     category: 'System'
 };

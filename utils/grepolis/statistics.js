@@ -1,12 +1,12 @@
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { CanvasRenderService } = require('chartjs-node-canvas');
-const { Attachment } = require('discord.js');
+const { MessageAttachment } = require('discord.js');
 
 const createEmbedForStatistics = (statistics, is_today, boardtype) => {
     let attackers = '',
         defenders = '';
 
-    const embed = new RichEmbed();
+    const embed = new MessageEmbed();
 
     statistics.att.slice(0, 10).map((stat, index) => {
         let place = index + 1;
@@ -15,9 +15,9 @@ const createEmbedForStatistics = (statistics, is_today, boardtype) => {
         if (place === 2) stat.emoji = ':second_place:';
         if (place === 3) stat.emoji = ':third_place:';
 
-        attackers += `${stat.emoji ? stat.emoji : `#${place}.`} [${stat.n}](${process.env.FRONTEND_URL}/${boardtype}?world=${
-            statistics.world
-        }&id=${stat.i}) - ${stat.s}\n`;
+        attackers += `${stat.emoji ? stat.emoji : `#${place}.`} [${stat.n}](${
+            process.env.FRONTEND_URL
+        }/${boardtype}?world=${statistics.world}&id=${stat.i}) - ${stat.s}\n`;
     });
 
     statistics.def.slice(0, 10).map((stat, index) => {
@@ -27,22 +27,27 @@ const createEmbedForStatistics = (statistics, is_today, boardtype) => {
         if (place === 2) stat.emoji = ':second_place:';
         if (place === 3) stat.emoji = ':third_place:';
 
-        defenders += `${stat.emoji ? stat.emoji : `#${place}.`} [${stat.n}](${process.env.FRONTEND_URL}/${boardtype}?world=${
-            statistics.world
-        }&id=${stat.i}) - ${stat.s}\n`;
+        defenders += `${stat.emoji ? stat.emoji : `#${place}.`} [${stat.n}](${
+            process.env.FRONTEND_URL
+        }/${boardtype}?world=${statistics.world}&id=${stat.i}) - ${stat.s}\n`;
     });
 
     embed
         .setTitle('🏆 Daily ' + boardtype + ' scoreboard for ' + statistics.world)
         .setURL(`${process.env.FRONTEND_URL}/points?world=${statistics.world}`)
         .setColor(0x18bc9c)
-        .setDescription(`Showing ${boardtype} points gained on ${statistics.date} ` + (is_today?`before ${statistics.time}`:'(**yesterday**)'))
+        .setDescription(
+            `Showing ${boardtype} points gained on ${statistics.date} ` +
+                (is_today ? `before ${statistics.time}` : '(**yesterday**)')
+        )
         .addField('**⚔ Best attackers**', attackers, true)
         .addField('**🛡 Best defenders**', defenders, true)
         .addField('\u200B', `[See more 📈](${process.env.FRONTEND_URL}/points?world=${statistics.world})`, false);
     if (is_today) {
-        let otherType = boardtype==='player'?'alliance':'player';
-        embed.setFooter(`next update: ${statistics.nextUpdate}. Use command '!gd today ${otherType}' to see ${otherType}s`);
+        let otherType = boardtype === 'player' ? 'alliance' : 'player';
+        embed.setFooter(
+            `next update: ${statistics.nextUpdate}. Use command '!gd today ${otherType}' to see ${otherType}s`
+        );
     }
 
     return embed;
@@ -50,7 +55,7 @@ const createEmbedForStatistics = (statistics, is_today, boardtype) => {
 
 const createEmbedForIndexedCity = (statistics, index) => {
     let intel = '';
-    const embed = new RichEmbed();
+    const embed = new MessageEmbed();
 
     statistics.intel.slice(0, 10).map((stat) => {
         let units = '';
@@ -65,11 +70,9 @@ const createEmbedForIndexedCity = (statistics, index) => {
         .setURL(`${process.env.FRONTEND_URL}/indexer/town/${index}/${statistics.world}/${statistics.town_id}`)
         .setColor(0x18bc9c)
         .setDescription(
-            `Index: [${index}](${process.env.FRONTEND_URL}/indexer/${index}) Player: [${
-                statistics.player_name
-            }](${process.env.FRONTEND_URL}/indexer/player/${index}/${statistics.world}/${
-                statistics.player_id
-            }) ${statistics.alliance_id &&
+            `Index: [${index}](${process.env.FRONTEND_URL}/indexer/${index}) Player: [${statistics.player_name}](${
+                process.env.FRONTEND_URL
+            }/indexer/player/${index}/${statistics.world}/${statistics.player_id}) ${statistics.alliance_id &&
                 `Alliance: [show alliance intel](${process.env.FRONTEND_URL}/indexer/alliance/${index}/${statistics.world}/${statistics.alliance_id})`}`
         )
         .addField(`Troop intelligence [town]${statistics.town_id}[/town]`, intel, false)
@@ -126,7 +129,7 @@ const createHeatmapChartForPlayer = async (statistics) => {
                             labelString: 'Relative activity'
                         },
                         ticks: {
-                            display: false,
+                            display: false
                         }
                     }
                 ]
@@ -139,7 +142,7 @@ const createHeatmapChartForPlayer = async (statistics) => {
 
     return {
         player: statistics.name,
-        image: new Attachment(image, 'heatmap.jpg')
+        image: new MessageAttachment(image, 'heatmap.jpg')
     };
 };
 

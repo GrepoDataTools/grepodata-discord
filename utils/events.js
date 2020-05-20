@@ -9,8 +9,9 @@ module.exports = async (client) => {
     events.map((event) => {
         let name = _.split(event, '.', 2)[0];
         name = _.replace(name, 'events/', '');
+        name = _.replace(name, 'events\\', '');
         const eventFile = require(`../${event}`);
 
         client.on(name, eventFile.bind(null, client));
-    })
-}
+    });
+};

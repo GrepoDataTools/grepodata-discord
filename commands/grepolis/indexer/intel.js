@@ -35,6 +35,7 @@ exports.config = {
 exports.settings = {
     name: 'intel',
     description: 'Shows available intel for a city',
+    permLevel: 'User',
     usage: 'intel [city bb code]',
     category: 'Indexer'
 };

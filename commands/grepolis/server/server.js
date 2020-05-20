@@ -10,7 +10,9 @@ exports.run = async (client, message) => {
     const serverIndicator = message.content.toLowerCase().match(/^([a-z]{2})([0-9]{1,3})$/);
 
     if (!serverIndicator)
-        return message.channel.send(`Please enter a valid world (eg. en124 or nl79). ${message.content} is not valid world.`);
+        return message.channel.send(
+            `Please enter a valid world (eg. en124 or nl79). ${message.content} is not valid world.`
+        );
     const serverShortcut = serverIndicator[1];
     const serverNumber = serverIndicator[2];
 
@@ -44,6 +46,7 @@ exports.config = {
 exports.settings = {
     name: 'server',
     description: 'Sets server for this guild.',
+    permLevel: 'User',
     usage: 'server [world indicator] (eg. en113, us86, nl77)',
     category: 'World'
 };

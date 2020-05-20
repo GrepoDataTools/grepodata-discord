@@ -7,7 +7,12 @@ exports.run = async (client, message, args, command) => {
     const yesterday = command.includes('yesterday') || command.includes('prev') ? '&yesterday=true' : '';
 
     let boardtype = 'player';
-    if ( message.content === 'alliance' || message.content === 'ally' || message.content === 'alli' || message.content === 'all') {
+    if (
+        message.content === 'alliance' ||
+        message.content === 'ally' ||
+        message.content === 'alli' ||
+        message.content === 'all'
+    ) {
         boardtype = 'alliance';
     }
     if (world) {
@@ -16,15 +21,17 @@ exports.run = async (client, message, args, command) => {
                 `${process.env.BACKEND_URL}/scoreboard/${boardtype}?world=${message.content}&guild=${message.guild.id}${yesterday}&minimal=true`
             )
             .then((response) => {
-                const embed = createEmbedForStatistics(response.data, yesterday==='', boardtype);
+                const embed = createEmbedForStatistics(response.data, yesterday === '', boardtype);
                 message.channel.send(embed);
             })
             .catch(() => message.channel.send(`Something went wrong. Please try again later.`));
     } else {
         await axios
-            .get(`${process.env.BACKEND_URL}/scoreboard/${boardtype}?guild=${message.guild.id}${yesterday}&minimal=true`)
+            .get(
+                `${process.env.BACKEND_URL}/scoreboard/${boardtype}?guild=${message.guild.id}${yesterday}&minimal=true`
+            )
             .then((response) => {
-                const embed = createEmbedForStatistics(response.data, yesterday==='', boardtype);
+                const embed = createEmbedForStatistics(response.data, yesterday === '', boardtype);
                 message.channel.send(embed);
             })
             .catch(() => message.channel.send(`Something went wrong. Please try again later.`));
@@ -37,6 +44,7 @@ exports.config = {
 exports.settings = {
     name: 'points',
     description: 'Shows worlds statistics',
+    permLevel: 'User',
     usage: 'points (or) points [world - eg. en113]',
     category: 'Statistics'
 };

@@ -10,7 +10,6 @@ module.exports = async (client, message) => {
     if (message.content.indexOf(settings.prefix) !== 0) return;
 
     const mention = new RegExp(`^<@!?${client.user.id}>( |)$`);
-
     if (message.content.match(mention)) return message.reply(`Prefix for this guild is \`${settings.prefix}\``);
 
     const args = message.content
@@ -55,7 +54,9 @@ module.exports = async (client, message) => {
             .get(`${process.env.BACKEND_URL}/discord/guild_settings?guild=${message.guild.id}`)
             .then((response) => {
                 if (!response.data.server || response.data.server == null) {
-                    message.reply(`To use this command you must first choose a world for your guild by running \`!gd server [WORLD]\``);
+                    message.reply(
+                        `To use this command you must first choose a world for your guild by running \`!gd server [WORLD]\``
+                    );
                     return false;
                 } else {
                     message.guild.server = response.data.server;
@@ -63,15 +64,31 @@ module.exports = async (client, message) => {
                 }
             })
             .catch(() => {
-                message.reply(`To use this command you must first choose a world for your guild by running \`!gd server [WORLD]\``);
+                message.reply(
+                    `To use this command you must first choose a world for your guild by running \`!gd server [WORLD]\``
+                );
                 return false;
             });
 
         if (!indexExists) return;
     }
 
+    const level = client.permlevel(message);
+
+    if (level < client.levelCache[cmd.settings.permLevel]) {
+        if (settings.systemNotice === 'true') {
+            return message.channel.send(`You do not have permission to use this command.
+  Your permission level is ${level} (${client.config.permLevels.find((l) => l.level === level).name})
+  This command requires level ${client.levelCache[cmd.conf.permLevel]} (${cmd.conf.permLevel})`);
+        } else {
+            return;
+        }
+    }
+
+    message.author.permLevel = level;
+
     message.content = _.replace(message.content, `${settings.prefix} ${command}`, '');
     message.content = _.trimStart(message.content);
 
-    cmd.run(client, message, args, command);
+    cmd.run(client, message, args, command, level);
 };
