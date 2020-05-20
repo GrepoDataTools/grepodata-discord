@@ -144,5 +144,7 @@ exports.settings = {
     description: 'Calculate resources, attack value, defense value, population and many more things for troops.',
     permLevel: 'User',
     category: 'Grepolis',
-    usage: 'calculator {number of troops}{troop} -> 95archers 55griff 85char'
+    usage:
+        'calculator {number of troops}{troop} -> 95archers 55griff 85char\n' +
+        'eg. sword, slinger, archer, hoplite, horse, chariot, catapult, ...\n You can use all units that Grepolis has!'
 };
