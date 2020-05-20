@@ -10,7 +10,7 @@ const config = {
     ownerID: ['139090652821585920', '124238615684448257'],
     admins: [],
     support: [],
-    token: 'NjczOTM2Mzc4MzM3Mjk2NDIx.Xr1jvA.3RozJNzWwdWHnHkxdaFLTdzn5zg',
+    token: process.env.BOT_TOKEN,
     defaultSettings: {
         prefix: '!gd',
         modLogChannel: 'mod-log',
