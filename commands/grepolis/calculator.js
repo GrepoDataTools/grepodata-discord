@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const units = require('../../utils/grepolis/units');
+const Logger = require('../../utils/logger');
 
 exports.run = async (client, message, args, command, level) => {
     let attackValues = {
@@ -25,12 +26,19 @@ exports.run = async (client, message, args, command, level) => {
         population: 0
     };
 
+    let invalidName = false;
     args.map((argument) => {
         const unitArgument = argument.match(/([0-9]+)([a-z]+)/);
         const unitNumber = unitArgument[1];
         const unitName = unitArgument[2];
 
         const unit = units.getUnit(unitName);
+        if (!unit) {
+            invalidName = true;
+            return message.channel.send(
+                `Sorry, **${unitName}** is not a valid unit name. use command \`!gd help calculator\` for a list of unit names.`
+            );
+        }
 
         attackValues[unit.attack_type] = attackValues[unit.attack_type] + unit.attack_value * unitNumber;
 
@@ -133,11 +141,13 @@ exports.run = async (client, message, args, command, level) => {
             }
         );
 
-    message.channel.send({ embed });
+    if (invalidName === false) {
+        message.channel.send({ embed });
+    }
 };
 
 exports.config = {
-    aliases: []
+    aliases: ['calc', 'calculate']
 };
 exports.settings = {
     name: 'calculator',
@@ -146,5 +156,5 @@ exports.settings = {
     category: 'Grepolis',
     usage:
         'calculator {number of troops}{troop} -> 95archers 55griff 85char\n' +
-        'eg. sword, slinger, archer, hoplite, horse, chariot, catapult, ...\n You can use all units that Grepolis has!'
+        'List of units: swordman, slinger, archer, hoplite, horseman, chariot, catapult, minotaur, manticore, cyclop, harpy, medusa, pegasus, cerberus, erinys, griffin, boar, envoy, transport, bireme, lightship, fireship, fasttransport, trireme, colonyship, hydra\n'
 };

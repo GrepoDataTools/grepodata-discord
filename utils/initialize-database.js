@@ -44,13 +44,13 @@ const database = (module.exports = {
             db.exec(
                 `INSERT INTO naval_units (id, name, type, wood, stone, silver, favor, population, attack_type, attack_value, defense_value, capacity)
                  VALUES
-                    (1, "transport boat", "transport", 500, 500, 400, 0, 7, "ship", 0, 0, 26),
+                    (1, "transport", "transport", 500, 500, 400, 0, 7, "ship", 0, 0, 26),
                     (2, "bireme", "defense", 800, 700, 180, 0, 8, "ship", 24, 160, 0),
-                    (3, "light ship", "attack", 1300, 300, 800, 0, 10, "ship", 200, 60, 0),
-                    (4, "fire ship", "defense", 500, 750, 1500, 0, 8, "ship", 20, 1, 0),
-                    (5, "fast transport ship", "transport", 800, 0, 400, 0, 5, "ship", 0, 0, 10),
+                    (3, "lightship", "attack", 1300, 300, 800, 0, 10, "ship", 200, 60, 0),
+                    (4, "fireship", "defense", 500, 750, 1500, 0, 8, "ship", 20, 1, 0),
+                    (5, "fasttransport", "transport", 800, 0, 400, 0, 5, "ship", 0, 0, 10),
                     (6, "trireme", "both", 2000, 1300, 1300, 0, 16, "ship", 250, 250, 15),
-                    (7, "colony ship", "transport", 10000, 10000, 1000, 0, 170, "ship", 0, 0, 0),
+                    (7, "colonyship", "transport", 10000, 10000, 1000, 0, 170, "ship", 0, 0, 0),
                     (8, "hydra", "both", 6750, 3500, 4750, 300, 50, "ship", 1310, 1400, 0);
                 `
             );
@@ -78,8 +78,8 @@ const database = (module.exports = {
                     (15, "cerberus", "defense", 1950, 2350, 4700, 180, 30, "blunt", 210, 825, 300, 1575, 240),
                     (16, "erinys", "attack", 3300, 6600, 6600, 330, 55, "distance", 1700, 460, 460, 595, 440),
                     (17, "griffin", "attack", 4100, 2100, 5200, 230, 35, "blunt", 900, 320, 330, 100, 350),
-                    (18, "calydonian boar", "defense", 2900, 1500, 1600, 120, 20, "sharp", 180, 700, 700, 100, 240),
-                    (19, "divine envoy", "both", 0, 0, 0, 12, 3, "blunt", 45, 40, 40, 40, 5);
+                    (18, "boar", "defense", 2900, 1500, 1600, 120, 20, "sharp", 180, 700, 700, 100, 240),
+                    (19, "envoy", "both", 0, 0, 0, 12, 3, "blunt", 45, 40, 40, 40, 5);
                 `);
         }
     }
