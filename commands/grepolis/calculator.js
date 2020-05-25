@@ -26,19 +26,25 @@ exports.run = async (client, message, args, command, level) => {
         population: 0
     };
 
-    let invalidName = false;
+    let parsedUnits = [];
     args.map((argument) => {
         const unitArgument = argument.match(/([0-9]+)([a-z]+)/);
+        if (!unitArgument) {
+            return message.channel.send(
+                `Sorry, **${argument}** is not a valid calculator argument. use command \`!gd help calculator\` for an example of how to use this command.`
+            );
+        }
+
         const unitNumber = unitArgument[1];
         const unitName = unitArgument[2];
 
         const unit = units.getUnit(unitName);
         if (!unit) {
-            invalidName = true;
             return message.channel.send(
                 `Sorry, **${unitName}** is not a valid unit name. use command \`!gd help calculator\` for a list of unit names.`
             );
         }
+        parsedUnits.push(unitNumber + ' ' + unit.name);
 
         attackValues[unit.attack_type] = attackValues[unit.attack_type] + unit.attack_value * unitNumber;
 
@@ -62,6 +68,7 @@ exports.run = async (client, message, args, command, level) => {
     const embed = new Discord.MessageEmbed()
         .setColor(0x18bc9c)
         .setTitle('Troop calculator')
+        .setDescription('Parsed units: ' + parsedUnits.join(', '))
         .setThumbnail('https://grepodata.com/assets/images/favicon_lg_white.png')
         .addFields(
             {
@@ -141,7 +148,7 @@ exports.run = async (client, message, args, command, level) => {
             }
         );
 
-    if (invalidName === false) {
+    if (parsedUnits.length > 0) {
         message.channel.send({ embed });
     }
 };
@@ -155,6 +162,6 @@ exports.settings = {
     permLevel: 'User',
     category: 'Grepolis',
     usage:
-        'calculator {number of troops}{troop} -> 95archers 55griff 85char\n' +
-        'List of units: swordman, slinger, archer, hoplite, horseman, chariot, catapult, minotaur, manticore, cyclop, harpy, medusa, pegasus, cerberus, erinys, griffin, boar, envoy, transport, bireme, lightship, fireship, fasttransport, trireme, colonyship, hydra\n'
+    'calculator {number of troops}{troop} -> !gd calculator 95archer 55griff 85char\n' +
+    'List of units: swordman, slinger, archer, hoplite, horseman, chariot, catapult, minotaur, manticore, cyclop, harpy, medusa, pegasus, cerberus, erinys, griffin, boar, envoy, transport, bireme, lightship, fireship, fasttransport, trireme, colonyship, hydra\n'
 };
