@@ -1,6 +1,5 @@
 const Discord = require('discord.js');
 const units = require('../../utils/grepolis/units');
-const Logger = require('../../utils/logger');
 
 exports.run = async (client, message, args, command, level) => {
     let attackValues = {

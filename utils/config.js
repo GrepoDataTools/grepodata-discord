@@ -116,10 +116,7 @@ async function loadBot() {
         .catch((error) => Logger.error(`Unexpected error while bot login: ${error.message}`))
         .finally(() =>
             Logger.log(
-                `Bot is serving for ${client.guilds.cache.reduce(
-                    (acc, val) => acc + val.memberCount,
-                    0
-                )} users in ${_.size(client.guilds)} guilds.`
+                `Bot is serving.`
             )
         );
 }

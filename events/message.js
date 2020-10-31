@@ -9,6 +9,11 @@ module.exports = async (client, message) => {
 
     if (message.content.indexOf(settings.prefix) !== 0) return;
 
+    if (message.content === "!gd usercount") {
+        message.reply(`GrepoData Bot is serving ${client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)} users in ${client.guilds.cache.size} guilds.`);
+        return;
+    };
+
     const mention = new RegExp(`^<@!?${client.user.id}>( |)$`);
     if (message.content.match(mention)) return message.reply(`Prefix for this guild is \`${settings.prefix}\``);
 
