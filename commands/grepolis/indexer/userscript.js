@@ -2,39 +2,25 @@ const { get } = require('axios');
 const { MessageEmbed } = require('discord.js');
 
 exports.run = async (client, message) => {
-    const guildIndex = await get(`${process.env.BACKEND_URL}/discord/get_index?guild=${message.guild.id}`)
-        .then((response) => response.data)
-        .catch(() => false);
-
-    if (guildIndex) {
-        const { key, userscript } = guildIndex;
-
-        const embed = new MessageEmbed().setTitle('Contribute intelligence').setColor(0x18bc9c)
-            .setDescription(`Help your alliance by contributing to enemy city index [${key}](https://grepodata.com/indexer/${key})!
-                  1. Download Tampermonkey for your browser
-                  2. [Install this userscript for index ${key}](${userscript})
-                  3. Reload your browser; you can now add in-game reports to the index`);
-
-        return message.channel.send(embed);
-    }
-
-    const embed = new MessageEmbed().setTitle('Contribute intelligence').setColor(0x18bc9c)
-        .setDescription(`Create your index and gather intel with your teammates!
-                  1. Go to our [webpage](https://grepodata.com/indexer/) and create your index or view one.
+    const embed = new MessageEmbed().setTitle('Getting started: GrepoData City Indexer').setColor(0x18bc9c)
+        .setDescription(`Get started using the GrepoData City Indexer:
+                  1. [Create a GrepoData account](https://grepodata.com/indexer/) to collect and share enemy intelligence.
                   2. Download Tampermonkey for your browser
-                  3. Install the userscript for the index.
-                  4. Reload your browser; you can now add in-game reports to the index`);
+                  3. Install the [GrepoData Userscript](https://api.grepodata.com/script/indexer.user.js)
+                  4. Reload your browser; you can now add in-game reports to your account
+                  5. Create or join an index to share the collected intel with your allies
+                  `);
 
     return message.channel.send(embed);
 };
 
 exports.config = {
-    aliases: ['script', 'indexer']
+    aliases: ['script', 'indexer', 'userscript', 'index', 'intel']
 };
 exports.settings = {
-    name: 'userscript',
-    description: 'Helps to set indexer',
+    name: 'indexer',
+    description: 'Get started using the GrepoData City Indexer',
     permLevel: 'User',
-    usage: 'userscript',
+    usage: 'indexer',
     category: 'Indexer'
 };

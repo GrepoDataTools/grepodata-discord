@@ -157,10 +157,10 @@ exports.config = {
 };
 exports.settings = {
     name: 'calculator',
-    description: 'Calculate resources, attack value, defense value, population and many more things for troops.',
+    description: 'Calculate resources, attack value, defense value, population, etc. for troops.',
     permLevel: 'User',
     category: 'Grepolis',
     usage:
-    'calculator {number of troops}{troop} -> !gd calculator 95archer 55griff 85char\n' +
-    'List of units: swordman, slinger, archer, hoplite, horseman, chariot, catapult, minotaur, manticore, cyclop, harpy, medusa, pegasus, cerberus, erinys, griffin, boar, envoy, transport, bireme, lightship, fireship, fasttransport, trireme, colonyship, hydra\n'
+        'calculator {number of troops}{troop} -> !gd calculator 95archer 55griff 85char\n' +
+        'List of units: swordman, slinger, archer, hoplite, horseman, chariot, catapult, minotaur, manticore, cyclop, harpy, medusa, pegasus, cerberus, erinys, griffin, boar, envoy, transport, bireme, lightship, fireship, fasttransport, trireme, colonyship, hydra\n'
 };

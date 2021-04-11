@@ -9,10 +9,14 @@ module.exports = async (client, message) => {
 
     if (message.content.indexOf(settings.prefix) !== 0) return;
 
-    if (message.content === "!gd usercount") {
-        message.reply(`GrepoData Bot is serving ${client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)} users in ${client.guilds.cache.size} guilds.`);
+    if (message.content === '!gd usercount') {
+        message.reply(
+            `GrepoData Bot is serving ${client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)} users in ${
+                client.guilds.cache.size
+            } guilds.`
+        );
         return;
-    };
+    }
 
     const mention = new RegExp(`^<@!?${client.user.id}>( |)$`);
     if (message.content.match(mention)) return message.reply(`Prefix for this guild is \`${settings.prefix}\``);
@@ -37,46 +41,34 @@ module.exports = async (client, message) => {
             'This command is unavailable via private message. Please run this command in a guild.'
         );
 
-    Logger.log(`[COMMAND] ${message.author.username}(${message.author.id}) ran command ${cmd.settings.name}`);
+    Logger.log(
+        `[COMMAND] ${message.author.username}(${message.author.id}, guild ${message.guild.id}) ran command ${cmd.settings.name}`
+    );
 
-    if (cmd.config.indexRequired) {
-        indexExists = await axios
-            .get(`${process.env.BACKEND_URL}/discord/get_index?guild=${message.guild.id}`)
-            .then((response) => {
-                message.guild.index = response.data.key;
-                return true;
-            })
-            .catch(() => {
-                message.reply(`To use this command please set guild\'s index by running ${settings.prefix} index`);
-                return false;
-            });
-
-        if (!indexExists) return;
-    }
-
-    if (cmd.config.serverRequired) {
-        indexExists = await axios
-            .get(`${process.env.BACKEND_URL}/discord/guild_settings?guild=${message.guild.id}`)
-            .then((response) => {
-                if (!response.data.server || response.data.server == null) {
-                    message.reply(
-                        `To use this command you must first choose a world for your guild by running \`!gd server [WORLD]\``
-                    );
-                    return false;
-                } else {
-                    message.guild.server = response.data.server;
-                    return true;
-                }
-            })
-            .catch(() => {
-                message.reply(
-                    `To use this command you must first choose a world for your guild by running \`!gd server [WORLD]\``
-                );
-                return false;
-            });
-
-        if (!indexExists) return;
-    }
+    // if (cmd.config.serverRequired) {
+    //     let t =2;
+    //     indexExists = await axios
+    //         .get(`${process.env.BACKEND_URL}/discord/guild_settings?guild=${message.guild.id}`)
+    //         .then((response) => {
+    //             if (!response.data.server || response.data.server == null) {
+    //                 message.reply(
+    //                     `To use this command you must first choose a world for your guild by running \`!gd server [WORLD]\``
+    //                 );
+    //                 return false;
+    //             } else {
+    //                 message.guild.server = response.data.server;
+    //                 return true;
+    //             }
+    //         })
+    //         .catch(() => {
+    //             message.reply(
+    //                 `To use this command you must first choose a world for your guild by running \`!gd server [WORLD]\``
+    //             );
+    //             return false;
+    //         });
+    //
+    //     if (!indexExists) return;
+    // }
 
     const level = client.permlevel(message);
 

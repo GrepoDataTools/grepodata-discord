@@ -12,5 +12,6 @@ exports.settings = {
     description: 'Shows your level.',
     permLevel: 'User',
     category: 'System',
-    usage: 'mylevel'
+    usage: 'mylevel',
+    helpHidden: true
 };

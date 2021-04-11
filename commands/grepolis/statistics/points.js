@@ -24,7 +24,10 @@ exports.run = async (client, message, args, command) => {
                 const embed = createEmbedForStatistics(response.data, yesterday === '', boardtype);
                 message.channel.send(embed);
             })
-            .catch(() => message.channel.send(`Something went wrong. Please try again later.`));
+            .catch((e) => {
+                Logger.error(e);
+                message.channel.send(`Something went wrong. Please try again later.`);
+            });
     } else {
         await axios
             .get(
@@ -34,7 +37,10 @@ exports.run = async (client, message, args, command) => {
                 const embed = createEmbedForStatistics(response.data, yesterday === '', boardtype);
                 message.channel.send(embed);
             })
-            .catch(() => message.channel.send(`Something went wrong. Please try again later.`));
+            .catch((e) => {
+                Logger.error(e);
+                message.channel.send(`Something went wrong. Please try again later.`);
+            });
     }
 };
 
@@ -43,8 +49,8 @@ exports.config = {
 };
 exports.settings = {
     name: 'points',
-    description: 'Shows worlds statistics',
+    description: 'Shows the daily scoreboard of the active world. Usage: "!gd points en134"',
     permLevel: 'User',
-    usage: 'points (or) points [world - eg. en113]',
+    usage: 'points (or) points [world] (e.g. en113, nl74, us76)',
     category: 'Statistics'
 };

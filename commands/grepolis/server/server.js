@@ -45,8 +45,8 @@ exports.config = {
 };
 exports.settings = {
     name: 'server',
-    description: 'Sets server for this guild.',
+    description: 'Sets the active server for this guild. e.g. "!gd server nl84"',
     permLevel: 'User',
-    usage: 'server [world indicator] (eg. en113, us86, nl77)',
+    usage: 'server [world indicator] (e.g. en113, us86, nl77)',
     category: 'World'
 };
