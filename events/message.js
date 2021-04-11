@@ -45,31 +45,6 @@ module.exports = async (client, message) => {
         `[COMMAND] ${message.author.username}(${message.author.id}, guild ${message.guild.id}) ran command ${cmd.settings.name}`
     );
 
-    // if (cmd.config.serverRequired) {
-    //     let t =2;
-    //     indexExists = await axios
-    //         .get(`${process.env.BACKEND_URL}/discord/guild_settings?guild=${message.guild.id}`)
-    //         .then((response) => {
-    //             if (!response.data.server || response.data.server == null) {
-    //                 message.reply(
-    //                     `To use this command you must first choose a world for your guild by running \`!gd server [WORLD]\``
-    //                 );
-    //                 return false;
-    //             } else {
-    //                 message.guild.server = response.data.server;
-    //                 return true;
-    //             }
-    //         })
-    //         .catch(() => {
-    //             message.reply(
-    //                 `To use this command you must first choose a world for your guild by running \`!gd server [WORLD]\``
-    //             );
-    //             return false;
-    //         });
-    //
-    //     if (!indexExists) return;
-    // }
-
     const level = client.permlevel(message);
 
     if (level < client.levelCache[cmd.settings.permLevel]) {

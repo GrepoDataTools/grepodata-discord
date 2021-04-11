@@ -15,50 +15,21 @@ exports.run = async (client, message) => {
 
     if (!message.content) {
         message.channel.send(`Please enter a player name to search for. For exmaple: \`!gd search John Doe\`.`);
-    } else if (!isNaN(message.content)) {
-        await axios
-            .get(`${process.env.BACKEND_URL}/player/info?world=${message.guild.server}&id=${message.content}`)
-            .then(async (response) => {
-                const heatmap = await createHeatmapChartForPlayer(response.data);
-
-                const embed = new MessageEmbed()
-                    .setTitle(`Heatmap for player: ${heatmap.player}`)
-                    .attachFiles([heatmap.image])
-                    .setImage('attachment://heatmap.jpg')
-                    .setURL(`${process.env.FRONTEND_URL}/player?world=${message.guild.server}&id=${message.content}`)
-                    .setFooter("A player is considered 'active' when they gain attack points");
-
-                message.channel.send({ embed }).catch((error) => {
-                    Logger.log(error.message);
-                    if (error.message == 'Missing Permissions') {
-                        message.channel.send(
-                            `Sorry, I can not do that. This Discord server does not allow me to upload attachments :(`
-                        );
-                    } else {
-                        message.channel.send(`Sorry, I can not do that right now`);
-                    }
-                });
-            })
-            .catch((error) => {
-                Logger.log(error.message);
-                message.channel.send(
-                    `Could not find player with id **${message.content}** in world **${message.guild.server}**. Use command \`!gd server [WORLD]\` to change the default world for this guild.`
-                );
-            });
     } else {
-        const serverName = message.guild.server.substring(0, 2);
         const heatmapSearchUri = `${process.env.BACKEND_URL}/player/search?query=${encodeURI(
             message.content
-        )}&from=0&size=10&sql=true&server=${serverName}`;
+        )}&from=0&size=10&sql=true&guild=${message.guild.id}`;
         Logger.log(heatmapSearchUri);
         await axios
             .get(heatmapSearchUri)
             .then(async (response) => {
-                const player = response.data.results[0];
-                const playerServer = player.world.substring(0, 2);
                 const prefix = response.data.count > 10 ? 'Top 10 results' : 'All';
+                const guild_has_world =
+                    'discord' in response.data &&
+                    'guild_has_world' in response.data.discord &&
+                    response.data.discord.guild_has_world === true;
                 const embed = new MessageEmbed()
-                    .setTitle(`${prefix} matching your search: '${player.name}'`)
+                    .setTitle(`${prefix} matching your search: '${message.content}'`)
                     .setDescription(
                         `Due to privacy concerns, the heatmap feature is no longer available.\nInstead we will now show the offline time of the matched players.`
                     )
@@ -108,6 +79,14 @@ exports.run = async (client, message) => {
                     .addField('**Server**', world_list, true)
                     .addField('**Last Activity**', online_list, true);
 
+                if (!guild_has_world) {
+                    embed.addField(
+                        '**Set a default server to filter your search**',
+                        "Use command `!gd server [WORLD]` to set a default world. Your search will then be limited to players within that region. For example if your default server is en135, your search will only return results from 'en' servers.",
+                        false
+                    );
+                }
+
                 message.channel.send({ embed }).catch((error) => {
                     Logger.log(error.message);
                     if (error.message === 'Missing Permissions') {
@@ -122,9 +101,7 @@ exports.run = async (client, message) => {
             .catch((error) => {
                 Logger.log(error.message);
                 message.channel.send(
-                    `Could not find player with name **${
-                        message.content
-                    }** in server **${serverName.toUpperCase()}**. Use command \`!gd server [WORLD]\` to change the preferred server for this guild.`
+                    `Could not find any players with a name matching **${message.content}**. Use command \`!gd server [WORLD]\` to change the preferred server for this guild.`
                 );
             });
     }
