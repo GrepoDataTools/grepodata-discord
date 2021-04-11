@@ -50,25 +50,21 @@ exports.run = async (client, message) => {
                 });
                 let online_list = response.data.results.map((x) => {
                     if ('hours_inactive' in x && (x.hours_inactive || x.hours_inactive === 0)) {
-                        let hours_inactive = x.hours_inactive;
+                        const hours_inactive = x.hours_inactive;
                         let hours = hours_inactive % 24;
-                        let days = Math.floor(hours_inactive / 24);
-                        let weeks = Math.floor(hours_inactive / (24 * 7));
-                        let months = Math.floor(hours_inactive / (24 * 7 * 30));
-                        let time_readable_parts = [];
+                        let days = Math.floor(((hours_inactive % 24) * 7) / 24);
+                        let weeks = Math.floor((hours_inactive % (24 * 30)) / (24 * 7));
+                        let months = Math.floor(hours_inactive / (24 * 30));
                         if (months > 0) {
-                            time_readable_parts.push(`${months} month${months > 1 ? 's' : ''}`);
+                            return `${months}+ month${months > 1 ? 's' : ''} ago`;
                         }
                         if (weeks > 0) {
-                            time_readable_parts.push(`${weeks} week${weeks > 1 ? 's' : ''}`);
+                            return `${weeks}+ week${weeks > 1 ? 's' : ''} ago`;
                         }
                         if (days > 0) {
-                            time_readable_parts.push(`${days} day${days > 1 ? 's' : ''}`);
+                            return `${days}+ day${days > 1 ? 's' : ''} ago`;
                         }
-                        time_readable_parts.push(`${hours} hour${hours == 1 ? '' : 's'} ago`);
-                        let time_readable = time_readable_parts.join(', ');
-
-                        return time_readable;
+                        return `${hours}${hours > 1 ? '+' : ''} hour${hours === 1 ? '' : 's'} ago`;
                     }
                     return '?';
                 });
