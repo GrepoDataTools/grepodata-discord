@@ -36,44 +36,43 @@ exports.run = async (client, message) => {
                     .setFooter(`A player is considered 'active' when they gain at least 1 attack or town point.`);
 
                 // Rows
-                let player_list = response.data.results.map((x) => {
-                    if ('name' in x) {
-                        return `[${x.name}](${process.env.FRONTEND_URL}/player?world=${x.world}&id=${x.id})`;
-                    }
-                    return '?';
-                });
-                let world_list = response.data.results.map((x) => {
-                    if ('world' in x) {
-                        return `[${x.world}](${process.env.FRONTEND_URL}/points?world=${x.world})`;
-                    }
-                    return '?';
-                });
-                let online_list = response.data.results.map((x) => {
-                    if ('hours_inactive' in x && (x.hours_inactive || x.hours_inactive === 0)) {
-                        const hours_inactive = x.hours_inactive;
-                        let hours = hours_inactive % 24;
-                        let days = Math.floor(((hours_inactive % 24) * 7) / 24);
-                        let weeks = Math.floor((hours_inactive % (24 * 30)) / (24 * 7));
-                        let months = Math.floor(hours_inactive / (24 * 30));
-                        if (months > 0) {
-                            return `${months}+ month${months > 1 ? 's' : ''} ago`;
+                let players = response.data.results.map((x) => {
+                    try {
+                        let name = '?';
+                        if ('name' in x) {
+                            name = `[${x.name}](${process.env.FRONTEND_URL}/player?world=${x.world}&id=${x.id})`;
                         }
-                        if (weeks > 0) {
-                            return `${weeks}+ week${weeks > 1 ? 's' : ''} ago`;
+                        let world = '?';
+                        if ('world' in x) {
+                            world = x.world;
+                            // world = `[${x.world}](${process.env.FRONTEND_URL}/points?world=${x.world})`;
                         }
-                        if (days > 0) {
-                            return `${days}+ day${days > 1 ? 's' : ''} ago`;
+                        let hours_offline = '?';
+                        if ('hours_inactive' in x && (x.hours_inactive || x.hours_inactive === 0)) {
+                            const hours_inactive = x.hours_inactive;
+                            let hours = hours_inactive % 24;
+                            let days = Math.floor(((hours_inactive % 24) * 7) / 24);
+                            let weeks = Math.floor((hours_inactive % (24 * 30)) / (24 * 7));
+                            let months = Math.floor(hours_inactive / (24 * 30));
+                            if (months > 0) {
+                                hours_offline = `${months}+ month${months > 1 ? 's' : ''} ago`;
+                            } else if (weeks > 0) {
+                                hours_offline = `${weeks}+ week${weeks > 1 ? 's' : ''} ago`;
+                            } else if (days > 0) {
+                                hours_offline = `${days}+ day${days > 1 ? 's' : ''} ago`;
+                            } else {
+                                hours_offline = `${hours}${hours > 1 ? '+' : ''} hour${hours === 1 ? '' : 's'} ago`;
+                            }
                         }
-                        return `${hours}${hours > 1 ? '+' : ''} hour${hours === 1 ? '' : 's'} ago`;
+
+                        return `${name} - ${world} - ${hours_offline}`;
+                    } catch (e) {
+                        Logger.error(e);
                     }
-                    return '?';
                 });
 
                 // Table
-                embed
-                    .addField('**Player name**', player_list, true)
-                    .addField('**Server**', world_list, true)
-                    .addField('**Last Activity**', online_list, true);
+                embed.addField('**Player name - Server - Last Activity**', players, false);
 
                 if (!guild_has_world) {
                     embed.addField(
