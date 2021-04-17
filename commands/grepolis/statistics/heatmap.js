@@ -23,7 +23,7 @@ exports.run = async (client, message) => {
         await axios
             .get(heatmapSearchUri)
             .then(async (response) => {
-                const prefix = response.data.count > 10 ? 'Top 10 results' : 'All';
+                const prefix = response.data.count > 10 ? 'Top 10 results' : 'All players';
                 const guild_has_world =
                     'discord' in response.data &&
                     'guild_has_world' in response.data.discord &&
@@ -74,7 +74,7 @@ exports.run = async (client, message) => {
                 // Table
                 embed.addField('**Player name - Server - Last Activity**', players, false);
 
-                if (!guild_has_world) {
+                if (!guild_has_world && response.data.count >= 10) {
                     embed.addField(
                         '**Set a default server to filter your search**',
                         "Use command `!gd server [WORLD]` to set a default world. Your search will then be limited to players within that region. For example if your default server is en135, your search will only return results from 'en' servers.",
