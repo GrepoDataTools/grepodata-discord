@@ -51,7 +51,7 @@ exports.run = async (client, message) => {
                         if ('hours_inactive' in x && (x.hours_inactive || x.hours_inactive === 0)) {
                             const hours_inactive = x.hours_inactive;
                             let hours = hours_inactive % 24;
-                            let days = Math.floor(((hours_inactive % 24) * 7) / 24);
+                            let days = Math.floor((hours_inactive % (24 * 7)) / 24);
                             let weeks = Math.floor((hours_inactive % (24 * 30)) / (24 * 7));
                             let months = Math.floor(hours_inactive / (24 * 30));
                             if (months > 0) {
