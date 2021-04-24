@@ -23,7 +23,7 @@ exports.run = async (client, message) => {
                         .setTitle(`**${message.member.displayName}** shared a report`)
                         .setColor(0x18bc9c)
                         .setDescription(
-                            `Player: [${data.player_name}](${process.env.FRONTEND_URL}/intel/player/${data.world}/${data.player_name}) Town: [${data.town_name}](${process.env.FRONTEND_URL}/intel/town/${data.world}/${data.town_id})\nTown BB: \`[town]${data.town_id}[/town]\``
+                            `Player: [${data.player_name}](${process.env.FRONTEND_URL}/intel/player/${data.world}/${data.player_id}) Town: [${data.town_name}](${process.env.FRONTEND_URL}/intel/town/${data.world}/${data.town_id})\nTown BB: \`[town]${data.town_id}[/town]\``
                         )
                         .setFooter(`Powered by the GrepoData userscript: grepodata.com/indexer`);
 
