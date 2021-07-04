@@ -26,7 +26,9 @@ exports.run = async (client, message) => {
         return Object.values(server.worlds).find((world) => world.val === serverNumber);
     });
 
-    if (!world) return message.channel.send(`World ${serverShortcut}${serverNumber} was not found.`);
+    if (!world) {
+        return message.channel.send(`World ${serverShortcut}${serverNumber} was not found.`);
+    }
 
     await axios
         .get(`${process.env.BACKEND_URL}/discord/set_server?guild=${message.guild.id}&server=${message.content}`)

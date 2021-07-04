@@ -30,9 +30,6 @@ exports.run = async (client, message) => {
                     response.data.discord.guild_has_world === true;
                 const embed = new MessageEmbed()
                     .setTitle(`${prefix} matching your search: '${message.content}'`)
-                    .setDescription(
-                        `Due to privacy concerns, the heatmap feature is no longer available.\nInstead we will now show the offline time of the matched players.`
-                    )
                     .setFooter(`A player is considered 'active' when they gain at least 1 attack or town point.`);
 
                 // Rows

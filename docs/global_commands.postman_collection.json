@@ -1,0 +1,194 @@
+{
+    "info": {
+        "_postman_id": "35cbe0e9-0ce6-4851-bdba-858485458c87",
+        "name": "Grepodata discord",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "alliance",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bot {{discord_token}}",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\r\n    \"name\": \"alliance\",\r\n    \"description\": \"Shows the daily alliance scoreboard.\",\r\n    \"options\": [\r\n        {\r\n            \"type\": 3,\r\n            \"name\": \"world\",\r\n            \"description\": \"Optional: enter the world code. For example: 'en134' or 'nl85'\",\r\n            \"required\": false\r\n        },\r\n        {\r\n            \"type\": 3,\r\n            \"name\": \"day\",\r\n            \"description\": \"Select today's or yesterday's scoreboard. Defauly: today\",\r\n            \"required\": false,\r\n            \"choices\": [\r\n                {\r\n                    \"name\": \"today\",\r\n                    \"value\": \"today\"\r\n                },\r\n                {\r\n                    \"name\": \"yesterday\",\r\n                    \"value\": \"yesterday\"\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "https://discord.com/api/v8/applications/{{discord_app_id}}/commands",
+                    "protocol": "https",
+                    "host": ["discord", "com"],
+                    "path": ["api", "v8", "applications", "{{discord_app_id}}", "commands"]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "today",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bot {{discord_token}}",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\r\n    \"name\": \"today\",\r\n    \"description\": \"Shows today's player scoreboard.\",\r\n    \"options\": [\r\n        {\r\n            \"type\": 3,\r\n            \"name\": \"world\",\r\n            \"description\": \"Optional: enter the world code. For example: 'en134' or 'nl85'\",\r\n            \"required\": false\r\n        }\r\n    ]\r\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "https://discord.com/api/v8/applications/{{discord_app_id}}/commands",
+                    "protocol": "https",
+                    "host": ["discord", "com"],
+                    "path": ["api", "v8", "applications", "{{discord_app_id}}", "commands"]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "yesterday",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bot {{discord_token}}",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\r\n    \"name\": \"yesterday\",\r\n    \"description\": \"Shows yesterday's player scoreboard.\",\r\n    \"options\": [\r\n        {\r\n            \"type\": 3,\r\n            \"name\": \"world\",\r\n            \"description\": \"Optional: enter the world code. For example: 'en134' or 'nl85'\",\r\n            \"required\": false\r\n        }\r\n    ]\r\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "https://discord.com/api/v8/applications/{{discord_app_id}}/commands",
+                    "protocol": "https",
+                    "host": ["discord", "com"],
+                    "path": ["api", "v8", "applications", "{{discord_app_id}}", "commands"]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "world",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bot {{discord_token}}",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\r\n    \"name\": \"world\",\r\n    \"description\": \"Set the default world for this server.\",\r\n    \"options\": [\r\n        {\r\n            \"type\": 3,\r\n            \"name\": \"world\",\r\n            \"description\": \"Enter the world id. For example: 'en134' or 'nl85'\",\r\n            \"required\": true\r\n        }\r\n    ]\r\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "https://discord.com/api/v8/applications/{{discord_app_id}}/commands",
+                    "protocol": "https",
+                    "host": ["discord", "com"],
+                    "path": ["api", "v8", "applications", "{{discord_app_id}}", "commands"]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "help",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bot {{discord_token}}",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\r\n    \"name\": \"help\",\r\n    \"description\": \"Get a list of all original commands.\"\r\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "https://discord.com/api/v8/applications/{{discord_app_id}}/commands",
+                    "protocol": "https",
+                    "host": ["discord", "com"],
+                    "path": ["api", "v8", "applications", "{{discord_app_id}}", "commands"]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "get commands DEV BOT",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bot {{discord_token}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "https://discord.com/api/v8/applications/{{discord_app_id}}/commands",
+                    "protocol": "https",
+                    "host": ["discord", "com"],
+                    "path": ["api", "v8", "applications", "{{discord_app_id}}", "commands"]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "delete command",
+            "request": {
+                "method": "DELETE",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bot {{discord_token}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "https://discord.com/api/v8/applications/{{discord_app_id}}/commands/861181744182067270",
+                    "protocol": "https",
+                    "host": ["discord", "com"],
+                    "path": ["api", "v8", "applications", "{{discord_app_id}}", "commands", "861181744182067270"]
+                }
+            },
+            "response": []
+        }
+    ]
+}

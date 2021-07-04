@@ -7,7 +7,7 @@ exports.run = async (client, message) => {
         const longest = commandNames.reduce((long, string) => Math.max(long, string.length), 0);
 
         let currentCategory = '';
-        let output = `= Command List =\n\n [Use ${message.settings.prefix} help <command> for details]\n`;
+        let output = `= Command List =\n\n Alternatively, you can also use slash commands. Start typing '/' to see the options\n [Use ${message.settings.prefix} help <command> for details]\n`;
         const sortedCommands = commands
             .array()
             .sort((c, p) =>

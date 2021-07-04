@@ -102,6 +102,7 @@ async function loadBot() {
     require('./settings')(client);
     require('./commands')(client, `./commands`);
     require('./events')(client);
+    require('./interactions')(client);
 
     client.config = config;
     client.levelCache = {};
@@ -114,11 +115,7 @@ async function loadBot() {
         .login(process.env.BOT_TOKEN)
         .then(() => Logger.ready(`Bot successfully logged as ${client.user.username}[${client.user.id}].`))
         .catch((error) => Logger.error(`Unexpected error while bot login: ${error.message}`))
-        .finally(() =>
-            Logger.log(
-                `Bot is serving.`
-            )
-        );
+        .finally(() => Logger.log(`Bot is serving.`));
 }
 
 module.exports = loadBot;
