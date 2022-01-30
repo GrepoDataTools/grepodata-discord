@@ -103,49 +103,13 @@ module.exports = async (client) => {
                 break;
             case 'help':
             default:
-                // list commands
-                const commands = interaction.guild_id
-                    ? client.commands
-                    : client.commands.filter((command) => command.config.guildOnly !== true);
-                const commandNames = commands.keyArray();
-                const longest = commandNames.reduce((long, string) => Math.max(long, string.length), 0);
+                let output = `= Command List =\n\n GrepoData bot only responds to slash commands. Start typing '/' to see the options\n\n`;
 
-                let currentCategory = '';
-                let output = `= Command List =\n\n You can also use slash commands. Start typing '/' to see the options\n [Use '!gd help <command>' for details]\n`;
-                const sortedCommands = commands
-                    .array()
-                    .sort((c, p) =>
-                        p.settings.category > c.settings.category
-                            ? 1
-                            : p.settings.name > c.settings.name && p.settings.category === c.settings.category
-                            ? 1
-                            : -1
-                    );
-
-                sortedCommands.forEach((command) => {
-                    let cat;
-
-                    if (command.settings.category) {
-                        cat = command.settings.category.toProperCase();
-                    } else {
-                        cat = 'Misc';
-                    }
-
-                    if (currentCategory !== cat) {
-                        output += `\u200b\n== ${cat} ==\n`;
-                        currentCategory = cat;
-                    }
-
-                    if (!command.settings.helpHidden || command.settings.helpHidden === false) {
-                        output += `!gd ${command.settings.name}${' '.repeat(
-                            longest - command.settings.name.length
-                        )} :: ${
-                            command.settings.description
-                                ? `${command.settings.description}`
-                                : 'No description available'
-                        }\n`;
-                    }
-                });
+                output += `\u200b\n== World ==\n`;
+                output += `/world       :: Set the default game world for this Discord guild\n`;
+                output += `/today       :: Show today's player scoreboard\n`;
+                output += `/yesterday   :: Show yesterday's player scoreboard\n`;
+                output += `/alliance    :: Show alliance scoreboard\n`;
 
                 client.api.interactions(interaction.id, interaction.token).callback.post({
                     data: {

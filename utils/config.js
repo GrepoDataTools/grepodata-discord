@@ -3,8 +3,6 @@ const discord = require('discord.js');
 const Enmap = require('enmap');
 const _ = require('lodash');
 const Logger = require('./logger');
-const Database = require('better-sqlite3');
-const database = require('./initialize-database');
 
 const config = {
     ownerID: ['139090652821585920', '124238615684448257'],
@@ -92,15 +90,12 @@ async function loadBot() {
 
     const client = new discord.Client();
 
-    client.database = new Database('grepodata.db', { verbose: console.log });
     client.commands = new Enmap();
     client.aliases = new Enmap();
     client.settings = new Enmap({ name: 'settings' });
 
-    database.seed();
     require('./functions')(client);
     require('./settings')(client);
-    require('./commands')(client, `./commands`);
     require('./events')(client);
     require('./interactions')(client);
 
