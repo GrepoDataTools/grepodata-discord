@@ -3,6 +3,7 @@ const _ = require('lodash');
 const axios = require('axios');
 const Logger = require('./logger');
 const { createEmbedForStatistics } = require('./grepolis/statistics');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = async (client) => {
     client.ws.on('INTERACTION_CREATE', async (interaction) => {
@@ -15,6 +16,8 @@ module.exports = async (client) => {
 
         let world = null;
         let yesterday_opt = false;
+        let hashid = null;
+        let playername = null;
         if ('options' in interaction.data) {
             interaction.data.options.map((option) => {
                 switch (option.name) {
@@ -23,6 +26,12 @@ module.exports = async (client) => {
                         break;
                     case 'day':
                         yesterday_opt = option.value === 'yesterday';
+                        break;
+                    case 'hash':
+                        hashid = option.value;
+                        break;
+                    case 'playername':
+                        playername = option.value;
                         break;
                 }
             });
@@ -101,15 +110,162 @@ module.exports = async (client) => {
                     });
 
                 break;
+            case 'search':
+                // search players
+
+                if (playername.match(/\[player\].*\[\/player\]/)) {
+                    playername = playername
+                        .replace('[player]', '')
+                        .replace('[/player]', '')
+                        .toLowerCase();
+                }
+
+                if (!playername) {
+                    interactionReply(
+                        client,
+                        interaction,
+                        `Please enter a player name to search for. For exmaple: \`/search John Doe\`.`
+                    );
+                } else {
+                    const searchUri = `${process.env.BACKEND_URL}/player/search?query=${encodeURI(
+                        playername
+                    )}&from=0&size=10&sql=true&guild=${guild}`;
+                    Logger.log(searchUri);
+                    await axios
+                        .get(searchUri)
+                        .then(async (response) => {
+                            const prefix =
+                                response.data.count > 10 ? 'Top 10 results' : `We found ${response.data.count} players`;
+                            const guild_has_world =
+                                'discord' in response.data &&
+                                'guild_has_world' in response.data.discord &&
+                                response.data.discord.guild_has_world === true;
+                            const embed = new MessageEmbed()
+                                .setTitle(`${prefix} matching your search: '${playername}'`)
+                                .setFooter(
+                                    `A player is considered 'active' when they gain at least 1 attack or town point.`
+                                );
+
+                            // Rows
+                            let players = response.data.results.map((x) => {
+                                try {
+                                    let name = '?';
+                                    if ('name' in x) {
+                                        name = `[${x.name}](${process.env.FRONTEND_URL}/player?world=${x.world}&id=${x.id})`;
+                                    }
+                                    let world = '?';
+                                    if ('world' in x) {
+                                        world = x.world;
+                                        // world = `[${x.world}](${process.env.FRONTEND_URL}/points?world=${x.world})`;
+                                    }
+                                    let hours_offline = '?';
+                                    if ('hours_inactive' in x && (x.hours_inactive || x.hours_inactive === 0)) {
+                                        const hours_inactive = x.hours_inactive;
+                                        let hours = hours_inactive % 24;
+                                        let days = Math.floor((hours_inactive % (24 * 7)) / 24);
+                                        let weeks = Math.floor((hours_inactive % (24 * 30)) / (24 * 7));
+                                        let months = Math.floor(hours_inactive / (24 * 30));
+                                        if (months > 0) {
+                                            hours_offline = `${months}+ month${months > 1 ? 's' : ''} ago`;
+                                        } else if (weeks > 0) {
+                                            hours_offline = `${weeks}+ week${weeks > 1 ? 's' : ''} ago`;
+                                        } else if (days > 0) {
+                                            hours_offline = `${days}+ day${days > 1 ? 's' : ''} ago`;
+                                        } else {
+                                            hours_offline = `${hours}${hours > 1 ? '+' : ''} hour${
+                                                hours === 1 ? '' : 's'
+                                            } ago`;
+                                        }
+                                    }
+
+                                    return `${name} - ${world} - ${hours_offline}`;
+                                } catch (e) {
+                                    Logger.error(e);
+                                }
+                            });
+
+                            // Table
+                            embed.addField('**Player name - Server - Last Activity**', players, false);
+
+                            if (!guild_has_world && response.data.count >= 10) {
+                                embed.addField(
+                                    '**Set a default server to filter your search**',
+                                    "Use command `/world [WORLD]` to set a default world. Your search will then be limited to players within that region. For example if your default server is en135, your search will only return results from 'en' servers.",
+                                    false
+                                );
+                            }
+
+                            interactionReplyEmbed(client, interaction, embed);
+                        })
+                        .catch((error) => {
+                            Logger.log(error.message);
+                            interactionReply(
+                                client,
+                                interaction,
+                                `Could not find any players with a name matching **${playername}**. Use command \`/world [WORLD]\` to change the preferred server for this guild.`
+                            );
+                        });
+                }
+
+                break;
+            case 'gdreport':
+                // share report
+
+                hashid = hashid.replace('hash: ', '').replace('/gdreport ', '');
+                if (hashid.length > 24 || !/^r?m?-?\d{2,24}$/.test(hashid)) {
+                    interactionReply(
+                        client,
+                        interaction,
+                        `Sorry, **'${hashid}'** is not a valid report link.\n` +
+                            `Tip: Install the GrepoData indexer userscript to share reports via Discord.\nRead more: [grepodata.com/indexer](https://grepodata.com/indexer)`
+                    );
+                }
+
+                await axios
+                    // .get(`${process.env.BACKEND_URL}/discord/hash?guild=${guild}&hash=${hashid}`)
+                    .get(`https://api.grepodata.com/discord/hash?guild=${guild}&hash=${hashid}`)
+                    .then((response) => {
+                        let data = response.data;
+                        if (data.success === true) {
+                            let embed = new MessageEmbed();
+                            embed.setImage(response.data.url);
+
+                            embed
+                                .setTitle(`**${interaction.member.displayName}** shared a report`)
+                                .setColor(0x18bc9c)
+                                .setDescription(
+                                    `Player: [${data.player_name}](${process.env.FRONTEND_URL}/intel/player/${data.world}/${data.player_id}) Town: [${data.town_name}](${process.env.FRONTEND_URL}/intel/town/${data.world}/${data.town_id})\nTown BB: \`[town]${data.town_id}[/town]\``
+                                )
+                                .setFooter(`Powered by the GrepoData userscript: grepodata.com/indexer`);
+
+                            interactionReplyEmbed(client, interaction, embed);
+                        } else {
+                            interactionReply(
+                                client,
+                                interaction,
+                                `Sorry, we can not generate an image for this report. Try a different report or contact us if this error persists.`
+                            );
+                        }
+                    })
+                    .catch((err) => {
+                        Logger.log(err.message);
+                        interactionReply(
+                            client,
+                            interaction,
+                            `Sorry, we can not generate an image for this report. Try a different report or contact us if this error persists.`
+                        );
+                    });
+
+                break;
             case 'help':
             default:
                 let output = `= Command List =\n\n GrepoData bot only responds to slash commands. Start typing '/' to see the options\n\n`;
-
-                output += `\u200b\n== World ==\n`;
                 output += `/world       :: Set the default game world for this Discord guild\n`;
                 output += `/today       :: Show today's player scoreboard\n`;
                 output += `/yesterday   :: Show yesterday's player scoreboard\n`;
                 output += `/alliance    :: Show alliance scoreboard\n`;
+                output += `/search      :: Search for players by name\n`;
+                output += `/gdreport    :: Allows you to share a report using the GrepoData indexer userscript\n`;
 
                 client.api.interactions(interaction.id, interaction.token).callback.post({
                     data: {

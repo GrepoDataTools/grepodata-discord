@@ -88,7 +88,10 @@ async function loadBot() {
         process.exit();
     }
 
-    const client = new discord.Client();
+    // When we define our client, we include the property "shardCount"
+    // and set it to 'auto' to allow the client to automatically create
+    // the correct number of shards.
+    const client = new discord.Client({ shardCount: 3 });
 
     client.commands = new Enmap();
     client.aliases = new Enmap();
@@ -106,6 +109,7 @@ async function loadBot() {
         client.levelCache[thisLevel.name] = thisLevel.level;
     }
 
+    Logger.log(`Attempting client login.`);
     client
         .login(process.env.BOT_TOKEN)
         .then(() => Logger.ready(`Bot successfully logged as ${client.user.username}[${client.user.id}].`))

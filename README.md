@@ -37,10 +37,13 @@ then in your .env file specify environment, which can be either `production` or 
 
 ### Production
 
-Run prod using pm2:
+Run prod using pm2 ecosystem file:
+
+1. Move pm2.config.js to the production root
+2. Run the following command
 
 ```
-pm2 start index.js --name grepodata-discord-prod --interpreter "node@13.8.0" --cwd active/ --max-memory-restart 300M
+pm2 start pm2.config.js
 ```
 
 ### Acceptance
@@ -58,3 +61,13 @@ Run acc locally:
 ```
 node index.js
 ```
+
+## Reset session
+
+If the daily connection limit is exceeded due to excessive pm2 restarts, reset the session by running the reset_session.mjs script:
+
+```
+node reset_session.mjs
+```
+
+To check if the session start limit is depleted, make a GET call to https://discord.com/api/v8/gateway/bot

@@ -16,7 +16,6 @@
     },
     "dependencies": {
         "axios": "^0.19.2",
-        "better-sqlite3": "^5.4.3",
         "canvas": "^2.6.1",
         "chalk": "^3.0.0",
         "chart.js": "^2.9.3",
@@ -33,7 +32,8 @@
         "prop-types": "^15.7.2",
         "recursive-readdir": "^2.2.2",
         "request": "^2.88.0",
-        "winston": "^3.2.1"
+        "winston": "^3.2.1",
+        "ws": "^8.8.1"
     },
     "devDependencies": {
         "husky": "^4.2.1",

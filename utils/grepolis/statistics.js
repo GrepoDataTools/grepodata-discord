@@ -45,9 +45,7 @@ const createEmbedForStatistics = (statistics, is_today, boardtype) => {
         .addField('\u200B', `[See more 📈](${process.env.FRONTEND_URL}/points?world=${statistics.world})`, false);
     if (is_today) {
         let otherType = boardtype === 'player' ? 'alliance' : 'player';
-        embed.setFooter(
-            `next update: ${statistics.nextUpdate}. Use command '!gd today ${otherType}' to see ${otherType}s`
-        );
+        embed.setFooter(`next update expected in: ${statistics.nextUpdate}. Points delay can be up to 2 hours.`);
     }
 
     return embed;
