@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/GrepoDataTools/grepodata-discord#readme",
   "dependencies": {
+    "axios": "^1.4.0",
     "chalk": "^4.1.2",
     "discord.js": "^14.11.0",
     "dotenv": "^16.3.1",
