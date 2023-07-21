@@ -1,4 +1,4 @@
-const loadBot = require('./utils/config');
+const startup = require('./utils/config');
 
-loadBot()
+startup()
 

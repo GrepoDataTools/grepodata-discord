@@ -6,22 +6,20 @@ GrepoData Discord Bot was built using Discord.js library.
 
 Required dependencies:
 
--   Node >= 9.0.0
--   Python 2.7
+-   Node >= 18.16.0
 -   Visual Studio C++ build tools
 
 ### Installing
 
 ```
-npm install --python=PATH_TO_PYTHON\python27\python.exe
+npm install
 ```
 
 ### Rebuilding
 
-You may have to rebuild if you get a sqlite3 error: 'Error: Could not locate the bindings file'
 
 ```
-npm rebuild --python=PATH_TO_PYTHON\python27\python.exe
+npm rebuild
 ```
 
 ## Running bot
@@ -51,7 +49,7 @@ pm2 start pm2.config.js
 Run acc using pm2:
 
 ```
-pm2 start index.js --name grepodata-discord-acc --interpreter "node@13.8.0" --cwd active/
+pm2 start index.js --name grepodata-discord-acc --interpreter "node@18.16.0" --cwd active/
 ```
 
 ### Local
@@ -61,17 +59,3 @@ Run acc locally:
 ```
 node index.js
 ```
-
-## Reset session
-
-If the daily connection limit is exceeded due to excessive pm2 restarts, reset the session by running the reset_session.mjs script:
-
-```
-node reset_session.mjs
-```
-
-To check if the session start limit is depleted, make a GET call to https://discord.com/api/v8/gateway/bot
-
-### discord.js v12 hotfix:
-
-edit the file node_modules\discord.js\src\client\actions\MessageCreate.js and change if (channel) to if (channel && channel.messages) in line 10. Therefore, the bot can't receive messages from the voice chat channel. Obviously, it is better to migrate to a maintained version of discord.js but for now, it is more trouble than it's worth.

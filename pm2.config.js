@@ -4,7 +4,7 @@ module.exports = {
             name: 'grepodata-bot-prod',
             script: 'index.js',
             cwd: 'active',
-            interpreter: 'node@13.8.0',
+            interpreter: 'node@18.16.0',
             max_memory_restart: '500M',
             min_uptime: 5000,
             max_restarts: 50,

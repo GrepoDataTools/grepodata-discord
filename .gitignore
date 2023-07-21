@@ -3,7 +3,8 @@
 .vscode/
 
 # Environment file
-.env
+.env*
+!.end.example
 
 # Database 
 data/*
