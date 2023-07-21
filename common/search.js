@@ -33,10 +33,7 @@ async function handleSearchCommand(interaction) {
                         'guild_has_world' in response.data.discord &&
                         response.data.discord.guild_has_world === true;
                     const embed = new EmbedBuilder()
-                        .setTitle(`${prefix} matching your search: '${playername}'`)
-                        .setFooter(
-                            {text: `A player is considered 'active' when they gain at least 1 attack or town point.`}
-                        );
+                        .setTitle(`${prefix} matching your search: '${playername}'`);
 
                     // Rows
                     let players = response.data.results.map((x) => {
@@ -77,7 +74,8 @@ async function handleSearchCommand(interaction) {
                     });
 
                     // Table
-                    embed.addFields({ name: '**Player name - Server - Last Activity**', value: players, inline: false });
+                    let players_string = players.join('\n')
+                    embed.addFields({ name: '**Player name - Server - Last Activity**', value: players_string, inline: true });
 
                     if (!guild_has_world && response.data.count >= 10) {
                         embed.addFields({
@@ -87,10 +85,14 @@ async function handleSearchCommand(interaction) {
                         });
                     }
 
+                    embed.setFooter(
+                            {text: `A player is considered 'active' when they gain at least 1 attack or town point.`}
+                        )
+
                     interaction.reply({embeds: [embed]});
                 })
                 .catch((error) => {
-                    Logger.log(error.message);
+                    Logger.log(error.stack);
                     interaction.reply(
                         `Could not find any players with a name matching **${playername}**. Use command \`/world [WORLD]\` to change the preferred server for this guild.`
                     );

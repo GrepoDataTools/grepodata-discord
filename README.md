@@ -6,7 +6,7 @@ GrepoData Discord Bot was built using Discord.js library.
 
 Required dependencies:
 
--   Node >= 18.16.0
+-   Node >= 16.20.1
 -   Visual Studio C++ build tools
 
 ### Installing
@@ -41,6 +41,12 @@ then in your .env file specify environment, which can be either `production` or 
 
 ### Production
 
+Install pm2
+
+```
+npm install --global pm2
+```
+
 Run prod using pm2 ecosystem file:
 
 1. Move pm2.config.js to the production root
@@ -55,7 +61,7 @@ pm2 start pm2.config.js
 Run acc using pm2:
 
 ```
-pm2 start index.js --name grepodata-discord-acc --interpreter "node@18.16.0" --cwd active/
+pm2 start index.js --name grepodata-discord-acc --interpreter "node@16.20.1" --cwd active/
 ```
 
 ### Local

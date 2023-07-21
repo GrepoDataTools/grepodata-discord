@@ -18,7 +18,7 @@ git log -1
 # npm install
 echo "=== Running npm install"
 source /home/vps/.nvm/nvm.sh;
-nvm use 18.16.0
+nvm use 16.20.1
 npm install || exit "$?"
 
 # Update active
@@ -32,7 +32,7 @@ ln -s "$dirname" active
 echo "=== Restarting app"
 pm2 reload "grepodata-discord-prod"
 #pm2 stop gd-discord
-#pm2 start index.js --name grepodata-discord-prod --interpreter "node@18.16.0" --cwd active/
+#pm2 start index.js --name grepodata-discord-prod --interpreter "node@16.20.1" --cwd active/
 #pm2 save
 #pm2 list
 
