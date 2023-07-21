@@ -17,9 +17,15 @@ npm install
 
 ### Rebuilding
 
-
 ```
 npm rebuild
+```
+
+## Deploying Discord commands
+If you made changes to the command definitions in commands/*.js, then you should redeploy the commands via the Discord API.
+
+```
+node deploy-commands.js
 ```
 
 ## Running bot
