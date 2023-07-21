@@ -71,3 +71,7 @@ node reset_session.mjs
 ```
 
 To check if the session start limit is depleted, make a GET call to https://discord.com/api/v8/gateway/bot
+
+### discord.js v12 hotfix:
+
+edit the file node_modules\discord.js\src\client\actions\MessageCreate.js and change if (channel) to if (channel && channel.messages) in line 10. Therefore, the bot can't receive messages from the voice chat channel. Obviously, it is better to migrate to a maintained version of discord.js but for now, it is more trouble than it's worth.

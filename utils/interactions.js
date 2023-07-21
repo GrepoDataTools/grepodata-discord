@@ -3,7 +3,7 @@ const _ = require('lodash');
 const axios = require('axios');
 const Logger = require('./logger');
 const { createEmbedForStatistics } = require('./grepolis/statistics');
-const { MessageEmbed } = require('discord.js');
+const { MessageAttachment, MessageEmbed } = require('discord.js');
 
 module.exports = async (client) => {
     client.ws.on('INTERACTION_CREATE', async (interaction) => {
@@ -211,50 +211,71 @@ module.exports = async (client) => {
             case 'gdreport':
                 // share report
 
-                hashid = hashid.replace('hash: ', '').replace('/gdreport ', '');
-                if (hashid.length > 24 || !/^r?m?-?\d{2,24}$/.test(hashid)) {
-                    interactionReply(
-                        client,
-                        interaction,
-                        `Sorry, **'${hashid}'** is not a valid report link.\n` +
-                            `Tip: Install the GrepoData indexer userscript to share reports via Discord.\nRead more: [grepodata.com/indexer](https://grepodata.com/indexer)`
-                    );
-                }
+                interactionReply(
+                    client,
+                    interaction,
+                    `Sorry, this function is currently not available due to a Discord API update. We are working on a fix.`
+                );
+                break;
 
-                await axios
-                    // .get(`${process.env.BACKEND_URL}/discord/hash?guild=${guild}&hash=${hashid}`)
-                    .get(`https://api.grepodata.com/discord/hash?guild=${guild}&hash=${hashid}`)
-                    .then((response) => {
-                        let data = response.data;
-                        if (data.success === true) {
-                            let embed = new MessageEmbed();
-                            embed.setImage(response.data.url);
-
-                            embed
-                                .setTitle(`**${interaction.member.displayName}** shared a report`)
-                                .setColor(0x18bc9c)
-                                .setDescription(
-                                    `Player: [${data.player_name}](${process.env.FRONTEND_URL}/intel/player/${data.world}/${data.player_id}) Town: [${data.town_name}](${process.env.FRONTEND_URL}/intel/town/${data.world}/${data.town_id})\nTown BB: \`[town]${data.town_id}[/town]\``
-                                )
-                                .setFooter(`Powered by the GrepoData userscript: grepodata.com/indexer`);
-
-                            interactionReplyEmbed(client, interaction, embed);
-                        } else {
-                            interactionReply(
-                                client,
-                                interaction,
-                                `Sorry, we can not generate an image for this report. Try a different report or contact us if this error persists.`
-                            );
-                        }
-                    })
-                    .catch((err) => {
-                        Logger.log(err.message);
-                        interactionReply(
-                            client,
-                            interaction,
-                            `Sorry, we can not generate an image for this report. Try a different report or contact us if this error persists.`
-                        );
-                    });
+                // hashid = hashid.replace('hash: ', '').replace('/gdreport ', '');
+                // if (hashid.length > 24 || !/^r?m?-?\d{2,24}$/.test(hashid)) {
+                //     interactionReply(
+                //         client,
+                //         interaction,
+                //         `Sorry, **'${hashid}'** is not a valid report link.\n` +
+                //             `Tip: Install the GrepoData indexer userscript to share reports via Discord.\nRead more: [grepodata.com/indexer](https://grepodata.com/indexer)`
+                //     );
+                // }
+                //
+                // await axios
+                //     // .get(`${process.env.BACKEND_URL}/discord/hash?guild=${guild}&hash=${hashid}`)
+                //     .get(`https://api.grepodata.com/discord/hash?guild=${guild}&hash=${hashid}`)
+                //     .then((response) => {
+                //         let data = response.data;
+                //         if (data.success === true) {
+                //             let embed = new MessageEmbed();
+                //             // let imagename = response.data.url.split(/[/]+/).pop();
+                //             let image = new MessageAttachment(response.data.url, 'report.png');
+                //             // Logger.log(imagename);
+                //             Logger.log(client.api.version)
+                //             embed.setImage('attachment://report.png');
+                //             embed.setThumbnail('attachment://report.png');
+                //             // embed.setImage(response.data.url);
+                //
+                //             let name = 'User'
+                //             if (interaction.member && interaction.member.user && interaction.member.user.username !== undefined) {
+                //                 name = interaction.member.user.username
+                //             }
+                //             if (interaction.member && interaction.member.displayName !== undefined) {
+                //                 name = interaction.member.displayName
+                //             }
+                //             embed
+                //                 .setTitle(`**${name}** shared a report`)
+                //                 .setColor(0x18bc9c)
+                //                 .setDescription(
+                //                     `Player: [${data.player_name}](${process.env.FRONTEND_URL}/intel/player/${data.world}/${data.player_id}) Town: [${data.town_name}](${process.env.FRONTEND_URL}/intel/town/${data.world}/${data.town_id})\nTown BB: \`[town]${data.town_id}[/town]\``
+                //                 );
+                //                 // .setImage(response.data.url);
+                //                 // .setFooter(`Powered by the GrepoData userscript: grepodata.com/indexer`);
+                //
+                //             interactionReplyEmbedFile(client, interaction, embed, image);
+                //         } else {
+                //             interactionReply(
+                //                 client,
+                //                 interaction,
+                //                 `Sorry, we can not generate an image for this report. Try a different report or contact us if this error persists.`
+                //             );
+                //         }
+                //     })
+                //     .catch((err) => {
+                //         Logger.log(err.message);
+                //         interactionReply(
+                //             client,
+                //             interaction,
+                //             `Sorry, we can not generate an image for this report. Try a different report or contact us if this error persists.`
+                //         );
+                //     });
 
                 break;
             case 'help':
@@ -286,6 +307,18 @@ function interactionReplyEmbed(client, interaction, embed) {
             type: 4,
             data: {
                 embeds: [embed]
+            }
+        }
+    });
+}
+
+function interactionReplyEmbedFile(client, interaction, embed, file) {
+    client.api.interactions(interaction.id, interaction.token).callback.post({
+        data: {
+            type: 4,
+            data: {
+                embeds: [embed],
+                files: [file]
             }
         }
     });
