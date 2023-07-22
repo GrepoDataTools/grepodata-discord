@@ -12,7 +12,7 @@ module.exports = {
         output += `/yesterday   :: Show yesterday's player scoreboard\n`;
         output += `/alliance    :: Show alliance scoreboard\n`;
         output += `/search      :: Search for players by name\n`;
-        output += `/gdreport    :: Allows you to share a report using the GrepoData indexer userscript\n`;
+        output += `/report    :: Allows you to share a report using the GrepoData indexer userscript\n`;
 
         await interaction.reply({
             content: '```asciidoc\n' + output + '```',

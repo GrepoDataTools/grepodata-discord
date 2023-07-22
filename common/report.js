@@ -9,7 +9,7 @@ async function handleReportCommand(interaction) {
 
         // Parse options
         let hash = interaction.options.getString('hash');
-        let hashid = hash.replace('hash: ', '').replace('/gdreport ', '');
+        let hashid = hash.replace('hash: ', '').replace('/report ', '');
 
         if (hashid.length > 24 || !/^r?m?-?\d{2,24}$/.test(hashid)) {
             interaction.reply(
@@ -45,10 +45,13 @@ async function handleReportCommand(interaction) {
                     embed
                         .setTitle(`**${name}** shared a report`)
                         .setColor(0x18bc9c)
-                        .setDescription(
+                        .setFooter({text: `Powered by the GrepoData userscript: grepodata.com/indexer`});
+
+                    if ('town_id' in data && data.town_id) {
+                        embed.setDescription(
                             `Player: [${data.player_name}](${process.env.FRONTEND_URL}/intel/player/${data.world}/${data.player_id}) Town: [${data.town_name}](${process.env.FRONTEND_URL}/intel/town/${data.world}/${data.town_id})\nTown BB: \`[town]${data.town_id}[/town]\``
                         )
-                        .setFooter({text: `Powered by the GrepoData userscript: grepodata.com/indexer`});
+                    }
 
                     interaction.reply({embeds: [embed]});
                     // interaction.reply({embeds: [embed], files: [image]});
