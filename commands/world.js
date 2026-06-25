@@ -4,6 +4,16 @@ const axios = require('axios');
 const Logger = require('../utils/logger');
 const {handleScoreboardCommand} = require("../common/scoreboard");
 
+async function sendInteractionResponse(interaction, payload) {
+    if (interaction.deferred) {
+        return interaction.editReply(payload);
+    }
+    if (interaction.replied) {
+        return interaction.followUp(payload);
+    }
+    return interaction.reply(payload);
+}
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('world')
@@ -19,25 +29,31 @@ module.exports = {
             let world = interaction.options.getString('world');
             const serverIndicator = world.toLowerCase().match(/^([a-z]{2})([0-9]{1,3})$/);
             if (!serverIndicator) {
-                interaction.reply(`Please enter a valid world (e.g. en124 or nl79). '${world}' is not valid world.`);
+                await sendInteractionResponse(interaction, {
+                    content: `Please enter a valid world (e.g. en124 or nl79). '${world}' is not valid world.`
+                });
+                return;
+            }
+
+            if (!interaction.deferred && !interaction.replied) {
+                await interaction.deferReply();
             }
 
             await axios
                 .get(`${process.env.BACKEND_URL}/discord/set_server?guild=${guild}&server=${world}`)
-                .then(() => {
-                    interaction.reply(
-                        `\`Server for this guild was successfully set to ${world}\``
-                    );
+                .then(async () => {
+                    await sendInteractionResponse(interaction, {
+                        content: `\`Server for this guild was successfully set to ${world}\``
+                    });
                 })
-                .catch((error) => {
+                .catch(async (error) => {
                     Logger.error(error.stack)
-                    const { data } = error.response;
-                    if (error.response.status === 404) {
-                        interaction.reply(`\`Unable to find world '${world}'.\``);
+                    if (error.response && error.response.status === 404) {
+                        await sendInteractionResponse(interaction, { content: `\`Unable to find world '${world}'.\`` });
                     } else {
-                        interaction.reply(
-                            `\`Unable to update server for this guild. Please try again later or contact us if this error persists.\``
-                        );
+                        await sendInteractionResponse(interaction, {
+                            content: '\`Unable to update server for this guild. Please try again later or contact us if this error persists.\`'
+                        });
                     }
                 });
 

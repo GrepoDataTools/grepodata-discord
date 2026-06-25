@@ -2,26 +2,41 @@ const { AttachmentBuilder, EmbedBuilder } = require('discord.js');
 const axios = require('axios');
 const Logger = require('../utils/logger');
 
+async function sendInteractionResponse(interaction, payload) {
+    if (interaction.deferred) {
+        return interaction.editReply(payload);
+    }
+    if (interaction.replied) {
+        return interaction.followUp(payload);
+    }
+    return interaction.reply(payload);
+}
+
 async function handleReportCommand(interaction) {
     try {
         let guild = interaction.guild.id;
-        let command = interaction.commandName;
 
         // Parse options
         let hash = interaction.options.getString('hash');
         let hashid = hash.replace('hash: ', '').replace('/report ', '');
 
         if (hashid.length > 24 || !/^r?m?-?\d{2,24}$/.test(hashid)) {
-            interaction.reply(
+            await sendInteractionResponse(interaction, {
+                content:
                 `Sorry, **'${hashid}'** is not a valid report link.\n` +
                 `Tip: Install the GrepoData indexer userscript to share reports via Discord.\nRead more: [grepodata.com/indexer](https://grepodata.com/indexer)`
-            );
+            });
+            return;
+        }
+
+        if (!interaction.deferred && !interaction.replied) {
+            await interaction.deferReply();
         }
 
         await axios
             // .get(`${process.env.BACKEND_URL}/discord/hash?guild=${guild}&hash=${hashid}`)
             .get(`https://api.grepodata.com/discord/hash?guild=${guild}&hash=${hashid}`)
-            .then((response) => {
+            .then(async (response) => {
                 let data = response.data;
                 if (data.success === true) {
                     let embed = new EmbedBuilder();
@@ -53,25 +68,25 @@ async function handleReportCommand(interaction) {
                         )
                     }
 
-                    interaction.reply({embeds: [embed]});
+                    await sendInteractionResponse(interaction, {embeds: [embed]});
                     // interaction.reply({embeds: [embed], files: [image]});
                 } else {
-                    interaction.reply(
-                        `Sorry, we can not generate an image for this report. Try a different report or contact us if this error persists.`
-                    );
+                    await sendInteractionResponse(interaction, {
+                        content: 'Sorry, we can not generate an image for this report. Try a different report or contact us if this error persists.'
+                    });
                 }
             })
-            .catch((error) => {
+            .catch(async (error) => {
                 Logger.error(error.stack);
-                interaction.reply(
-                    `Sorry, we can not generate an image for this report. Try a different report or contact us if this error persists.`
-                );
+                await sendInteractionResponse(interaction, {
+                    content: 'Sorry, we can not generate an image for this report. Try a different report or contact us if this error persists.'
+                });
             });
     } catch (error) {
         Logger.error(error.stack);
-        interaction.reply(
-            `Sorry, we can not generate an image for this report. Try a different report or contact us if this error persists.`
-        );
+        await sendInteractionResponse(interaction, {
+            content: 'Sorry, we can not generate an image for this report. Try a different report or contact us if this error persists.'
+        });
     }
 }
 

@@ -2,43 +2,41 @@ const { EmbedBuilder } = require('discord.js');
 const axios = require('axios');
 const Logger = require('../utils/logger');
 
+async function sendInteractionResponse(interaction, payload) {
+    if (interaction.deferred) {
+        return interaction.editReply(payload);
+    }
+    if (interaction.replied) {
+        return interaction.followUp(payload);
+    }
+    return interaction.reply(payload);
+}
+
 async function handleScoreboardCommand(interaction) {
-    let guild = interaction.guild.id;
-    let command = interaction.commandName;
+    if (!interaction.deferred && !interaction.replied) {
+        await interaction.deferReply();
+    }
+
+    const guild = interaction.guild.id;
+    const command = interaction.commandName;
 
     // Parse options
-    let world = interaction.options.getString('world');
-    let yesterday_opt = interaction.options.getString('day') === 'yesterday';
+    const world = interaction.options.getString('world');
+    const yesterdayOpt = interaction.options.getString('day') === 'yesterday';
 
-    let boardtype = command === 'alliance' ? 'alliance' : 'player';
-    let yesterday = command === 'yesterday' || yesterday_opt ? '&yesterday=true' : '';
+    const boardtype = command === 'alliance' ? 'alliance' : 'player';
+    const yesterday = command === 'yesterday' || yesterdayOpt ? '&yesterday=true' : '';
+    const url = world
+        ? `${process.env.BACKEND_URL}/scoreboard/${boardtype}?world=${world}&guild=${guild}${yesterday}&minimal=true`
+        : `${process.env.BACKEND_URL}/scoreboard/${boardtype}?guild=${guild}${yesterday}&minimal=true`;
 
-    if (world) {
-        await axios
-            .get(
-                `${process.env.BACKEND_URL}/scoreboard/${boardtype}?world=${world}&guild=${guild}${yesterday}&minimal=true`
-            )
-            .then((response) => {
-                let embed = createEmbedForStatistics(response.data, yesterday === '', boardtype);
-                interaction.reply({embeds: [embed]})
-            })
-            .catch((e) => {
-                Logger.error(e.stack);
-                interaction.reply(`Something went wrong. Please try again later.`);
-            });
-    } else {
-        await axios
-            .get(
-                `${process.env.BACKEND_URL}/scoreboard/${boardtype}?guild=${guild}${yesterday}&minimal=true`
-            )
-            .then((response) => {
-                let embed = createEmbedForStatistics(response.data, yesterday === '', boardtype);
-                interaction.reply({embeds: [embed]})
-            })
-            .catch((e) => {
-                Logger.error(e.stack);
-                interaction.reply(`Something went wrong. Please try again later.`);
-            });
+    try {
+        const response = await axios.get(url);
+        const embed = createEmbedForStatistics(response.data, yesterday === '', boardtype);
+        await sendInteractionResponse(interaction, { embeds: [embed] });
+    } catch (e) {
+        Logger.error(e.stack);
+        await sendInteractionResponse(interaction, { content: 'Something went wrong. Please try again later.' });
     }
 }
 

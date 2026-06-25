@@ -60,6 +60,12 @@ async function startup() {
                 await command.execute(interaction);
             } catch (error) {
                 Logger.error(error.stack);
+                if (error && error.code === 10062) {
+                    Logger.warn(
+                        `Skipping error response for ${interaction.commandName} because Discord already rejected the interaction token.`
+                    );
+                    return;
+                }
                 if (interaction.replied || interaction.deferred) {
                     await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
                 } else {
