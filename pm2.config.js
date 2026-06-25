@@ -1,7 +1,7 @@
 module.exports = {
     apps: [
         {
-            name: 'grepodata-bot-prod',
+            name: 'grepodata-bot-prod-2026',
             script: 'index.js',
             cwd: 'active',
             interpreter: 'node@16.20.1',
@@ -9,7 +9,7 @@ module.exports = {
             min_uptime: 5000,
             max_restarts: 50,
             restart_delay: 60000,
-            // cron: '2 */3 * * *'
+            // cron: '2 3 * * *'
         }
     ]
 };

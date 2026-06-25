@@ -56,6 +56,15 @@ Run prod using pm2 ecosystem file:
 pm2 start pm2.config.js
 ```
 
+Register PM2 to start on boot and save the current process list:
+
+```sh
+pm2 startup
+pm2 save
+```
+
+If `pm2 startup` prints an additional command, run that command once with the required privileges, then run `pm2 save` again.
+
 ### Acceptance
 
 Run acc using pm2:

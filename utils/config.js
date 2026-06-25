@@ -48,6 +48,14 @@ async function startup() {
                 return;
             }
 
+            if (process.env.DEPRECATED === 'true') {
+                await interaction.reply({
+                    content: `⚠️ This version of the GrepoData bot is going offline. Please install the new version here:\n[GrepoData Discord Bot 2026](${process.env.INSTALL_LINK})`,
+                    ephemeral: false
+                });
+                return;
+            }
+
             try {
                 await command.execute(interaction);
             } catch (error) {
